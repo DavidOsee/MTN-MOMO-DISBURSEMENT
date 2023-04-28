@@ -2,7 +2,7 @@
 const express = require('express')
 const router = express.Router()
 
-const {Home, Success, GetPaid, NotFound} = require('../controllers/kapsController.js')
+const {Home, Success, GetPaid, Error, Process, NotFound} = require('../controllers/kapsController.js')
 
 //Middlewares
 const Protect = require('../middlewares/authMiddleware.js')
@@ -11,7 +11,9 @@ const Protect = require('../middlewares/authMiddleware.js')
 //
 router
 .get('/', Home)
-.get('/success', Protect, Success)
+.get('/process', Process)
+.get('/success', Success)
+.get('/error', Error)
 .get('*', NotFound)
 
 //POST REQ

@@ -83,6 +83,17 @@ const GetPaid = asyncHandler (async(req,res)=>{
 
 
 
+//PROCESS  @ / [GET]
+//@ Private access 
+
+const Process = asyncHandler (async(req,res)=>{
+
+  //
+  res.render('process')
+})
+
+
+
 
 //SUCCESS  @ / [GET]
 //@ Private access 
@@ -92,6 +103,20 @@ const Success = asyncHandler (async(req,res)=>{
   //
   res.render('success')
 })
+
+
+
+//ERROR  @ / [GET]
+//@ Private access 
+
+const Error = asyncHandler (async(req,res)=>{
+
+  //
+  res.render('error')
+})
+
+
+
 
 
 //NOTFOUND  @ / [GET]
@@ -113,5 +138,5 @@ const generateToken = (transaction_details)=>{
 
 //Export to kapsRoutes 
 module.exports = {
-	Home, Success, GetPaid, NotFound
+	Home, Success, GetPaid, Error, Process, NotFound
 }

@@ -22,11 +22,12 @@ app.set('views', './views');
 
 //Route IMPORTS 
 const kapsRoutes = require('./routes/kapsRoutes')
-
+const adminRoutes = require('./routes/adminRoutes')
 
 
 //Route inits
 app.use('/', kapsRoutes)
+app.use('/admin', adminRoutes)
 
 
 //Middleware imports 
