@@ -14,7 +14,7 @@ router
 .get('/process', Process)
 .get('/success', Success)
 .get('/error', Error)
-.get('*', NotFound)
+// .get('*', NotFound)
 
 //POST REQ
 router

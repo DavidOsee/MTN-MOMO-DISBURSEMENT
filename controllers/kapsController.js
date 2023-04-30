@@ -3,6 +3,8 @@ const asyncHandler = require('express-async-handler')
 const uuid = require('uuid')
 const momo = require("mtn-momo")
 const jwt = require('jsonwebtoken')
+const { GoogleSpreadsheet } = require('google-spreadsheet')
+const credentials = require('../G_credentials.json')
 
 //Localstorage
 const LocalStorage = require('node-localstorage').LocalStorage
@@ -20,6 +22,33 @@ const disbursements = Disbursements({
   userId: process.env.USER_ID,
   primaryKey: process.env.PRIMARY_KEY
 })
+
+
+//GETTING DATA FROM G-SHEET recording G-FORM data 
+// Initialize the sheet - doc ID is the long id in the sheets URL
+const doc = new GoogleSpreadsheet(process.env.SHEET_ID);
+
+(async function() {
+  
+  // Initialize Auth 
+  await doc.useServiceAccountAuth(credentials);
+
+  await doc.loadInfo() // loads document properties and worksheets
+  //await doc.updateProperties({ title: 'renamed doc' })
+
+  const sheet = doc.sheetsByIndex[0]; // or use doc.sheetsById[id] or doc.sheetsByTitle[title]
+  
+  //GET ROWS
+  const rows = await sheet.getRows(); // can pass in { limit, offset }
+  //console.log(rows[0].Timestamp)
+  console.log(doc.sheetsByIndex[0].headerValues)
+  
+}())
+
+
+
+
+
 
 
 

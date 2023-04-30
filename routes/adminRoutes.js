@@ -11,7 +11,7 @@ const {Login} = require('../controllers/adminController.js')
 
 //
 admin_router
-.get('/login', Login)
+.get('/', Login)
 
 
 

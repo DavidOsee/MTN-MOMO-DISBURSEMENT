@@ -1,5 +1,6 @@
 .env 
 node_modules
 *.txt
+#*.json
 package-lock.json
 tabler-dev
