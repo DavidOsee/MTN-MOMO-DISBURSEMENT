@@ -41,7 +41,7 @@ const doc = new GoogleSpreadsheet(process.env.SHEET_ID);
   //GET ROWS
   const rows = await sheet.getRows(); // can pass in { limit, offset }
   //console.log(rows[0].Timestamp)
-  console.log(doc.sheetsByIndex[0].headerValues)
+  //console.log(doc.sheetsByIndex[0].headerValues)
   
 }())
 

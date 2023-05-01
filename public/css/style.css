@@ -14,6 +14,46 @@ body {
 	align-items: center;
 } */
 
+.ui.secondary.pointing.menu a:first-child {
+	margin-left: auto;
+  }
+  
+  .ui.secondary.pointing.menu a:last-child {
+	margin-right: auto;
+  }
+
+
+  #exTab1 .tab-content {
+	color : white;
+	background-color: #428bca;
+	padding : 5px 15px;
+  }
+  
+  #exTab2 h3 {
+	color : white;
+	background-color: #428bca;
+	padding : 5px 15px;
+  }
+  
+  /* remove border radius for the tab */
+  
+  #exTab1 .nav-pills > li > a {
+	border-radius: 0;
+  }
+  
+  /* change border radius for the tab , apply corners on top*/
+  
+  #exTab3 .nav-pills > li > a {
+	border-radius: 4px 4px 0 0 ;
+  }
+  
+  #exTab3 .tab-content {
+	color : white;
+	background-color: #428bca;
+	padding : 5px 15px;
+  }
+
+
 .check-container {
 	width: 11.25rem;
 	height: 12.5rem;
@@ -115,5 +155,39 @@ body {
 		width: 85%;
 		height: 15%;
 		opacity: 0.25;
+	}
+}
+
+
+/* Large desktops and laptops */
+@media (min-width: 1200px) {
+	
+}
+
+/* Landscape tablets and medium desktops */
+@media (min-width: 992px) and (max-width: 1199px) {
+	#iframe{
+		width: 640px;
+	}
+}
+
+/* Portrait tablets and small desktops */
+@media (min-width: 768px) and (max-width: 991px) {
+	#iframe{
+		width: 640px;
+	}
+}
+
+/* Landscape phones and portrait tablets */
+@media (max-width: 767px) {
+	#iframe{
+		width: 460px;
+	}
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 480px) {
+	#iframe{
+		width: 340px;
 	}
 }

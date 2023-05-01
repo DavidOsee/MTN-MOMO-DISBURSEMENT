@@ -7,34 +7,55 @@
     </p> --}}
     <h1>Fundraising Grader</h1>
   </div>
-</center>
 
-<div class="row">
-  <div class="offset-md-3 col-md-6 offset-md-3">
-    <div class="card card-profile">
-      <div class="card-header" style="background-image: url(demo/photos/mtn.jpg);"></div>
-      <div class="card-body text-center">
-        <h3 class="mb-3">Redeem your bonus</h3>
-        <p class="mb-4">
-          Make sure you've filled the Google form form with your <b>MTN MOBILE MONEY phone number.</b>
-        </p>  
-        <br />
-        <a href="#" class="btn btn-outline-primary btn-md">
-        <span class="fa fa-edit"></span> Go back to edit the Form
-        </a>
-        <br /><br />
-        <form action="/process" method="post" class="mt-5  pb-9">
-          <div class="input-group">
-            <input type="text" class="form-control" placeholder="Enter your phone number">
-            <span class="input-group-append">
-              <button class="btn btn-primary" type="submit">Submit</button>
-            </span>
-          </div>
-        </form>
+  {{!-- style="background-color:#f5f7fb" --}}
+
+  <div class="ui pointing secondary menu">
+    <a class="ui blue button item active" data-tab="first">SONDAGE</a>
+    <a id="bonus_tab" class="ui blue button item" data-tab="second">BONUS</a>
+  </div>
+  <div class="ui tab segment active py-0" data-tab="first">
+    <div class="row">
+      <div class="offset-md-2 col-md-8 offset-md-2"> 
+          <iframe id="iframe" src="https://docs.google.com/forms/d/e/1FAIpQLSf3qJqoDyhz15pvzYkoxXZh7zL0lUSEGN_jAVYqSAYi7ZlpSg/viewform?embedded=true" width="964" height="1267" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
       </div>
     </div>
   </div>
-</div>
+  <div class="ui tab segment py-0" data-tab="second">
+    <div class="row">
+      <div class="offset-md-3 col-md-6 offset-md-3">
+        <div class="card card-profile">
+          <div class="card-header" style="background-image: url(demo/photos/mtn.jpg);"></div>
+          <div class="card-body text-center">
+            <h3 class="mb-3">Redeem your bonus</h3>
+            <p class="mb-4">
+              Make sure you've filled the Google form form with your <b>MTN MOBILE MONEY phone number.</b>
+            </p>  
+            <br />
+            <a href="#" class="btn btn-outline-primary btn-md">
+            <span class="fa fa-edit"></span> Go back to edit the Form
+            </a>
+            <br /><br />
+            <form action="/process" method="post" class="mt-5  pb-9">
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="Enter your phone number">
+                <span class="input-group-append">
+                  <button class="btn btn-primary" type="submit">Submit</button>
+                </span>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</center>
+
+
+
+
+
 
 
 
