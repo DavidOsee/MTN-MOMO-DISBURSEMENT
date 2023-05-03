@@ -6,43 +6,63 @@
 	<title>KAPS Disbursements Widget integration</title>
 	<!-- CSS only -->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-	<link rel="stylesheet" href="/css/style.css">
 	<!-- JavaScript Bundle with Popper -->
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+	
 	<!-- PRODUCTION <script src="https://widget.northeurope.cloudapp.azure.com:9443/v0.1.0/mobile-money-widget-mtn.js"></script> -->
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 	{{!--  --}}
+	<script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+	
+
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
  	<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js">
 	</script>
 	<script src="/js/script.js"></script>
 
-	<link rel="icon" href="./favicon.ico" type="image/x-icon"/>
+
     <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico" />
     <!-- Generated: 2018-04-06 16:27:42 +0200 -->
-    <title>Profile - tabler.github.io - a responsive, flat and full featured admin template</title>
+    <title>MTN MOMO Disbursement</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext">
-    <script src="/js/require.min.js"></script>
+    {{!-- <script src="/js/require.min.js"></script> --}}
 
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext">
-    <script src="/js/require.min.js"></script>
+    {{!-- <script src="/js/require.min.js"></script> --}}
     <script>
-      requirejs.config({
-          baseUrl: '.'
-      });
+      //requirejs.config({
+          //baseUrl: '.'
+      //});
     </script>
+	
+    
     <!-- Dashboard Core -->
-    <link href="/css/dashboard.css" rel="stylesheet" />
-    <script src="/js/dashboard.js"></script>
+    {{!-- <link href="/css/dashboard.css" rel="stylesheet" />
+    <script src="/js/dashboard.js"></script> --}}
     <!-- c3.js Charts Plugin -->
-    <link href="/plugins/charts-c3/plugin.css" rel="stylesheet" />
-    <script src="/plugins/charts-c3/plugin.js"></script>
+    {{!-- <link href="/plugins/charts-c3/plugin.css" rel="stylesheet" />
+    <script src="/plugins/charts-c3/plugin.js"></script> --}}
     <!-- Google Maps Plugin -->
     {{!-- <link href="/plugins/maps-google/plugin.css" rel="stylesheet" />
     <script src="/plugins/maps-google/plugin.js"></script> --}}
     <!-- Input Mask Plugin -->
-    <script src="/plugins/input-mask/plugin.js"></script>
+    {{!-- <script src="/plugins/input-mask/plugin.js"></script> --}}
+
+	
+	  <!-- Vendor CSS Files -->
+	<link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+	<link href="/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+	{{!-- <link href="/assets/vendor/quill/quill.snow.css" rel="stylesheet">
+	<link href="/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
+	<link href="/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+	<link href="/assets/vendor/simple-datatables/style.css" rel="stylesheet"> --}}
+	<link href="/css/admin_style.css" rel="stylesheet" />
+	<link href="/css/style.css" rel="stylesheet" />
+	
 	
 </head>
 <body class="d-flex flex-column min-vh-100">
@@ -60,6 +80,17 @@
 		;
 		
 	</script>
-	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+	{{!-- <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
+	<script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
+	<script src="/assets/vendor/quill/quill.min.js"></script>
+	<script src="/assets/vendor/tinymce/tinymce.min.js"></script> --}}
+	<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-P7JSYB1CSP"></script>
+	<script src="/assets/vendor/php-email-form/validate.js"></script>
+	<script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
+	<script src="/js/admin.js"></script>
+	{{!-- <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script> --}}
+	
+	
 </body>
 </html>
