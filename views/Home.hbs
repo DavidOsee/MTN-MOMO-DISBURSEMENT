@@ -21,29 +21,41 @@
       </div>
     </div>
   </div>
-  <div class="ui tab segment py-0" data-tab="second">
+  <div class="ui tab segment py-5" data-tab="second">
     <div class="row">
       <div class="offset-md-3 col-md-6 offset-md-3">
         <div class="card card-profile">
-          <div class="card-header" style="background-image: url(demo/photos/mtn.jpg); padding:90px;"></div>
+          <div class="card-header" style="background-image: url(img/mtn.jpg); padding:90px;"></div>
           <div class="card-body text-center">
             <h3 class="mb-3 mt-3">Redeem your bonus</h3>
             <p class="mb-4">
-              Make sure you've filled the Google form form with your <b>MTN MOBILE MONEY phone number.</b>
-            </p>  
-            <br />
-            <a href="#" class="btn btn-outline-primary btn-md">
-            <span class="fa fa-edit"></span> Go back to edit the Form
-            </a>
-            <br /><br />
-            <form action="/process" method="post" class="mt-5  pb-9">
-              <div class="input-group">
+              Make sure you've filled the Google form with your <b>MTN MOBILE MONEY phone number.</b>
+            </p>
+            {{!-- <div class="row">
+              <div class="offset-md-4 col-md-4 offset-md-4 d-flex ">
+                <div class="ui primary menu" style="border-color:rgb(237, 253, 253)">
+                  <a class="btn btn-outline-primary item btn-md" data-tab="first">
+                    <span class="fa fa-edit"></span> Go back to edit the Form
+                  </a>
+                </div>
+              </div>
+            </div> --}}
+            
+            
+
+            <form action="/process" method="post" class="mt-5  pb-4">
+              {{!-- <div class="input-group">
                 <input type="text" class="form-control" placeholder="Enter your phone number">
                 <span class="input-group-append">
                   <button class="btn btn-primary" type="submit">Submit</button>
                 </span>
+              </div> --}}
+              <div class="ui fluid action input">
+                <input type="text" placeholder="Search...">
+                <div class="ui primary button">Submit</div>
               </div>
-            </form>
+            </form><br /><br />
+            
           </div>
         </div>
       </div>
