@@ -11,7 +11,6 @@ const {Login, Home, Profile, Users, Register, ForgotPwd, ForgotPwd_otp, Password
 
 //
 admin_router
-.get('/', Login)
 .get('/home', Home)
 .get('/profile', Profile)
 .get('/users', Users)
@@ -21,7 +20,9 @@ admin_router
 .get('/password-reset', Password_reset)
 .get('/success', Success)
 
-
+//
+admin_router
+.post('/', Login)
 
 
 

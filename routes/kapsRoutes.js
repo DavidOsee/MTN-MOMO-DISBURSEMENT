@@ -2,22 +2,23 @@
 const express = require('express')
 const router = express.Router()
 
-const {Home, Success, GetPaid, Error, Process, NotFound} = require('../controllers/kapsController.js')
+const {Home, Success, GetPaid, Error, Process, SaveSurveyData, NotFound, Admin} = require('../controllers/kapsController.js')
 
 //Middlewares
-const Protect = require('../middlewares/authMiddleware.js')
+const Trans_auth = require('../middlewares/trans_authMiddleware.js')
 
 
-//
+//GET ROUTES
 router
 .get('/', Home)
-.get('/process', Process)
-.get('/success', Success)
-.get('/error', Error)
-// .get('*', NotFound)
+.get('/process', Trans_auth, Process)
+.get('/success',Trans_auth, Success)
+.get('/error/:id', Trans_auth, Error)
+.get('/admin', Admin)
 
-//POST REQ
+//POST ROUTES 
 router
+.post('/save', SaveSurveyData)
 .post('/getpaid', GetPaid)
 
 

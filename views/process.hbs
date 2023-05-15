@@ -1,39 +1,47 @@
 <div class="px-4 py-5 my-5 text-center">
-<div class="spinner-grow text-primary" style="width: 5rem; height: 5rem;" role="status">
-    <span class="visually-hidden">Loading...</span>
+    <div class="spinner-grow text-primary" style="width: 5rem; height: 5rem;" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+    <h3 class="display-5 fw-bold">Processing..</h3>
+
+    {{!-- <div class="d-flex">
+        <h4 id="min" class="bg-dark">10 : </h4>
+        <h4 id="sec" class="bg-dark">20</h4>
+    </div> --}}
+
+    <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4">You will be notified by <b>SMS</b> or <b>MTN Mobile APP</b> to confirm the transaction. Kindly make the payment in order to complete your transaction.</p>
+        <p class="lead mb-4">Please do not refresh the page or click the "Back" or "Close" button of your browser.</p>
+
+        {{!-- Hidden inputs holding the status of the transaction --}}
+        {{!-- <p  id="transactionID" class="d-none">{{transactionID}}</p>
+        <p  id="number" class="d-none">{{user_number}}</p>
+
+        <p style="display: none;" id="trans_para">Transaction - <b id="transaction_status">{{transaction_status}}</b></p> --}}
+
+        <p class="fs-2 text-info"><span id="timer"></span></p>
+
+        {{!-- Hidden inputs holding the status of the transaction --}}
+        <p  id="trans_id" class="d-none">{{trans_id}}</p>
+        <p  id="trans_status" class="d-none">{{trans_status}}</p>
+
+        {{!-- <p style="display: none;" id="trans_para">Transaction - <b id="transaction_status">{{transaction_status}}</b></p> --}}
+        
+    </div>
 </div>
-<h3 class="display-5 fw-bold">Processing..</h3>
-
-{{!-- <div class="d-flex">
-    <h4 id="min" class="bg-dark">10 : </h4>
-    <h4 id="sec" class="bg-dark">20</h4>
-</div> --}}
-
-<div class="col-lg-6 mx-auto">
-    <p class="lead mb-4">You will be notified by <b>SMS</b> or <b>MTN Mobile APP</b> to confirm the transaction. Kindly make the payment in order to complete your transaction.</p>
-    <p class="lead mb-4">Please do not refresh the page or click the "Back" or "Close" button of your browser.</p>
-
-    {{!-- Hidden inputs holding the status of the transaction --}}
-    <p  id="transactionID" class="d-none">{{transactionID}}</p>
-    <p  id="number" class="d-none">{{user_number}}</p>
-
-    <p style="display: none;" id="trans_para">Transaction - <b id="transaction_status">{{transaction_status}}</b></p>
-    
-</div>
-</div>
 
 
+<script>
+   
+   //Occasionaly Prevent browser back button  
+   window.history.pushState(null, null, window.location.href);
+        window.onpopstate = function () {
+        window.history.go(1);
+    };
 
-{{!-- Redirect on setTimeOut --}}
-<script type="text/javascript"> 
-    
     //Transaction deatails
-    const transactionID = document.getElementById('transactionID').innerText
-    const number = document.getElementById('number').innerText
-    const trans_para = document.getElementById('trans_para')
-
-    //
-    const status = document.getElementById('transaction_status').innerText
+    const transactionID = document.getElementById('trans_id').innerText
+    const status = document.getElementById('trans_status').innerText
 
     //Process function 
     function process() 
@@ -56,30 +64,23 @@
 
 
         //If Pending
-        if(status == 'PENDING'){
-
-            //Display pending status text 
-            trans_para.style.display = "block";  
+        if(status == 'PENDING'){ //UNSUCCESSFUL
 
             //Redirect to failure
-            window.location = `/success/${transactionID}`;
+            window.location = `/error/0`; //0-timedout | 1/any -internal error 
         }
       
         //If Successful 
         if(status == 'SUCCESSFUL'){
 
             //Redirect to success
-            window.location = `/success/${transactionID}`
+            window.location = `/success`
         }
     } 
 
     //5s Time out
-    setTimeout(process, 6000) //6s
-
-    //res.redirect
-
-    //Redirect to success
-    //res.redirect(`/failure/transaction-failed/${transaction_details.transactionId}`)
-    //Redirect to success
-    //res.redirect(`/failure/transaction-rejected/${transaction_details.transactionId}`)
+    setTimeout(process, 10000) //10s ...To be set at 20s later
+   
 </script>
+
+

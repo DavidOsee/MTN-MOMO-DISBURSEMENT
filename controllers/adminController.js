@@ -9,13 +9,12 @@ const LocalStorage = require('node-localstorage').LocalStorage
 const localStorage = new LocalStorage('./scratch')
 
 
-//LOGIN  @ /admin [GET]
-//@ Public access 
+//LOGIN  @ /admin [POST]
 
 const Login = asyncHandler (async(req,res)=>{
 
     //
-    res.render('admin/login')
+    
   })
 
 

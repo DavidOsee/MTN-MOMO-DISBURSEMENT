@@ -5,23 +5,23 @@
       <span class="fs-1"><b>Fundraising Grader</b></span><br />
       
     </p> --}}
-    <h1>Fundraising Grader</h1>
+    <h1>MTN MOMO DISBURSEMENT</h1>
   </div>
 
   {{!-- style="background-color:#f5f7fb" --}}
 
-  <div class="ui pointing secondary menu">
-    <a class="ui blue button item active" data-tab="first">SONDAGE</a>
-    <a id="bonus_tab" class="ui blue button item" data-tab="second">BONUS</a>
+  <div class="ui pointing secondary menu" style="margin-bottom:-15px;">
+    <a class="ui blue button item" data-tab="first">SURVEY</a>
+    <a id="bonus_tab" class="ui blue button item active" data-tab="second">BONUS</a>
   </div>
-  <div class="ui tab segment active py-0" data-tab="first">
+  <div class="ui tab segment  py-0" data-tab="first">
     <div class="row">
       <div class="offset-md-2 col-md-8 offset-md-2"> 
-          <iframe id="iframe" src="https://docs.google.com/forms/d/e/1FAIpQLSf3qJqoDyhz15pvzYkoxXZh7zL0lUSEGN_jAVYqSAYi7ZlpSg/viewform?embedded=true" width="964" height="1267" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+          <iframe id="iframe" src="https://docs.google.com/forms/d/e/1FAIpQLSf3qJqoDyhz15pvzYkoxXZh7zL0lUSEGN_jAVYqSAYi7ZlpSg/viewform?embedded=true" width="964" height="867" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
       </div>
     </div>
   </div>
-  <div class="ui tab segment py-5" data-tab="second">
+  <div class="ui tab segment active py-5" data-tab="second">
     <div class="row">
       <div class="offset-md-3 col-md-6 offset-md-3">
         <div class="card card-profile">
@@ -43,7 +43,7 @@
             
             
 
-            <form action="/process" method="post" class="mt-5  pb-4">
+            <form id="redeemForm" method="post" class="mt-5  pb-4">
               {{!-- <div class="input-group">
                 <input type="text" class="form-control" placeholder="Enter your phone number">
                 <span class="input-group-append">
@@ -51,8 +51,12 @@
                 </span>
               </div> --}}
               <div class="ui fluid action input">
-                <input type="text" placeholder="Search...">
-                <div class="ui primary button">Submit</div>
+                <input name="user_number" type="text" placeholder="Enter your number" />
+                <button id="submitBtn" type="submit" class="ui primary button">Submit</button>
+                <button id="submitLoading" class="ui primary loading button d-none">Loading</button>
+              </div>
+              <div id="redeem_alert" class="mt-4 alert alert-warning d-none" role="alert">
+                {{!-- {{error_content}} --}}
               </div>
             </form><br /><br />
             
