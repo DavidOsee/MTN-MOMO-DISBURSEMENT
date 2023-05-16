@@ -59,7 +59,7 @@ $(document).ready(function() {
         let val = $('#redeemForm input').val()
 
         //Empty form
-        if(val == "" || val.length > 100 || val.length < 3 || parseInt(val)!=val ) //9 digit max
+        if(val == "" || val.length > 9 || val.length <= 8 || parseInt(val)!=val ) //9 digit max
             $('#redeem_alert').removeClass('d-none').text('Please enter a valid number') 
 
         else{
@@ -75,7 +75,7 @@ $(document).ready(function() {
                         $('#redeem_alert').removeClass('d-none').text('You can not redeem a bonus twice.')
                     
                     else if(res == 'unknown')
-                        $('#redeem_alert').removeClass('d-none').text('Please complete your Form submission first !') //You need to first fill the Form
+                        $('#redeem_alert').removeClass('d-none').text('Kindly complete your Form submission first') //You need to first fill the Form
 
                     else{
                         //Btn swap 

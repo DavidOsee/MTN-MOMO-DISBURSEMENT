@@ -45,7 +45,7 @@ const doc = new GoogleSpreadsheet(process.env.SHEET_ID);
 //MODELS
 const Trans = require('../models/trans')
 const Survey_data = require('../models/survey_data')
-const { use } = require('../routes/kapsRoutes')
+//const { use } = require('../routes/kapsRoutes')
 
 
 //-- POST REQUESTS --
@@ -159,10 +159,10 @@ const GetPaid = asyncHandler (async(req,res)=>
   else{
     //USER ATTEMPTING TO REDEEM THE BONUS TWICE 
     //--Checking if number already exists and status == 'Successful'
-    const number_exist = await Trans.find({ 'user.number' : user_number.toString(), status : "SUCCESSFUL"}) //Return []
+    const check_number = await Trans.find({ 'user.number' : user_number, status : "SUCCESSFUL"}) //Return []
 
     //User found with a previous successful transaction 
-    if(number_exist.length != 0)
+    if(check_number.length != 0)
     {
       //Send a feedback to the FRONT-END 
       res.send('found')
@@ -478,18 +478,6 @@ const validateToken = (token)=>{
 
 
 
-
-
-//NOTFOUND  @ / [GET]
-//@ Private access 
-
-const NotFound = (req,res)=>{
-
-  //
-  res.render('404')
-}
-
-
 //Admin  @ / [GET]
 //@ Public access 
 
@@ -502,5 +490,5 @@ const Admin = (req,res)=>{
 
 //Export to kapsRoutes 
 module.exports = {
-	Home, Success, GetPaid, Error, Process, SaveSurveyData, NotFound, Admin
+	Home, Success, GetPaid, Error, Process, SaveSurveyData, Admin
 }

@@ -26,20 +26,23 @@ app.set('views', './views');
 
 
 //Disable browser caching 
-// app.use((req,res,next)=>{
-//     res.set('Cache-Control', 'no-store')
-//     next()
-// })
+app.use((req,res,next)=>{
+    res.set('Cache-Control', 'no-store')
+    next()
+})
 
 
 //Route IMPORTS 
 const kapsRoutes = require('./routes/kapsRoutes')
 const adminRoutes = require('./routes/adminRoutes')
-
+const notFound = require('./middlewares/notFound_Middleware')
 
 //Route inits
 app.use('/', kapsRoutes)
 app.use('/admin', adminRoutes)
+
+//404
+app.use(notFound)
 
 
 //Middleware imports 
