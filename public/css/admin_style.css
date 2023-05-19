@@ -1,3 +1,4 @@
+
 /**
 * Template Name: NiceAdmin
 * Updated: Mar 09 2023 with Bootstrap v5.2.3
@@ -6,9 +7,18 @@
 * License: https://bootstrapmade.com/license/
 */
 
+/* My own */
+div.jq-toast-single{
+  font-size: 1em;
+  width: 250px;
+  margin-left: 20px;
+}
+
+
 /*--------------------------------------------------------------
 # General
 --------------------------------------------------------------*/
+
 :root {
   scroll-behavior: smooth;
 }
@@ -18,6 +28,7 @@ body {
   background: #f6f9ff;
   color: #444444;
 }
+
 
 a {
   color: #4154f1;

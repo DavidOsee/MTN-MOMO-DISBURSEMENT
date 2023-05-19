@@ -3,18 +3,20 @@
 const express = require('express')
 const admin_router = express.Router()
 
-const {Login, Home, Profile, Users, Register, ForgotPwd, ForgotPwd_otp, Password_reset, Success} = require('../controllers/adminController.js')
+const {Login, Log_me_in, Logout, Home, Profile, Users, Register, Admin_register, ForgotPwd, ForgotPwd_otp, Password_reset, Success} = require('../controllers/adminController.js')
 
 //Middlewares
-//onst admin_Protect = require('../middlewares/authMiddleware.js')
+const Protect = require('../middlewares/admin_authMiddleware.js')
 
 
 //
 admin_router
-.get('/home', Home)
-.get('/profile', Profile)
-.get('/users', Users)
-.get('/register', Register)
+.get('/', Login)
+.get('/home', Protect, Home)
+.get('/profile', Protect, Profile)
+.get('/users', Protect, Users)
+.get('/register', Protect, Register)
+
 .get('/forgot-password', ForgotPwd)
 .get('/otp-auth', ForgotPwd_otp)
 .get('/password-reset', Password_reset)
@@ -22,7 +24,9 @@ admin_router
 
 //
 admin_router
-.post('/', Login)
+.post('/logmein', Log_me_in)
+.post('/logout', Logout)
+.post('/admin_register', Admin_register)
 
 
 

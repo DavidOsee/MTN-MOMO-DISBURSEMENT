@@ -11,12 +11,6 @@ const LocalStorage = require('node-localstorage').LocalStorage
 const localStorage = new LocalStorage('./scratch')
 
 
-//Bcrypt
-const bcrypt = require('bcrypt')
-
-//ENCRYPTED ERROR MSG 
-const error  = async (msg)=>{ await bcrypt.hash(msg,2) }
-
 
 //INITIALIZING MOMO LIBRARY
 const { Disbursements } = momo.create({
@@ -24,7 +18,6 @@ const { Disbursements } = momo.create({
 })
 
 //--SET GLOBAL VARIABLE AMOUNT 
-localStorage.setItem('amount', 5000)
 AMOUNT = (localStorage.getItem('amount')) ? localStorage.getItem('amount') : 5000
 
 
@@ -204,9 +197,10 @@ const GetPaid = asyncHandler (async(req,res)=>
         const token_id = uuid.v4().slice(0,8) //Sonme id to diff each trans_token 
   
         //--Store token_id into user's cookies 
-        res.cookie("trans_token_id", token_id, {httpOnly: true, secure: true }) //After 4 min(240s * 1000s)
+        res.cookie("trans_token_id", token_id, {httpOnly: true, secure: true }) //Expires when browser closes 
   
         //Write JWT in SERVER LOCALSTORAGE
+        //--Storing it in a file to handle "Token use completed" coz we can not expire a JWT
         localStorage.setItem('trans_token_'+token_id.toString(), trans_token)
         
         //REDIRECT
@@ -443,27 +437,13 @@ const Home = asyncHandler( async(req, res)=>
 
 
 
-
-
-
-
-
-
-
-
-//========================= UTIL FUNCTIONS 
+//========================= FUNCTIONS 
 
 //GENERATE JWT 
 const generateToken = (transaction_details, expiring_time)=>{
   //Create token 
   return jwt.sign(transaction_details, process.env.SECRET_KEY, { expiresIn : expiring_time})
 }
-
-//VALIDATE JWT 
-const validateToken = (token)=>{
-  return jwt.verify(token, process.env.SECRET_KEY)
-}
-
 
 
 //============================
@@ -474,21 +454,7 @@ const validateToken = (token)=>{
 
 
 
-
-
-
-
-//Admin  @ / [GET]
-//@ Public access 
-
-const Admin = (req,res)=>{
-
-  //
-  res.render('admin/login')
-}
-
-
 //Export to kapsRoutes 
 module.exports = {
-	Home, Success, GetPaid, Error, Process, SaveSurveyData, Admin
+	Home, Success, GetPaid, Error, Process, SaveSurveyData
 }

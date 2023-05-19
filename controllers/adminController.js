@@ -1,21 +1,201 @@
 //
 const asyncHandler = require('express-async-handler')
-const uuid = require('uuid')
 const momo = require("mtn-momo")
 const jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt')
 
 //Localstorage
 const LocalStorage = require('node-localstorage').LocalStorage
-const localStorage = new LocalStorage('./scratch')
+const ls = new LocalStorage('./admin_storage')
+
+//ADMIN_USER MODEL
+const Admin_user = require('../models/admin')
+const Trans = require('../models/trans')
 
 
-//LOGIN  @ /admin [POST]
+//= = = POST ROUTES = = =
 
-const Login = asyncHandler (async(req,res)=>{
+//--  @ /logmein [POST]
 
-    //
+const Log_me_in = asyncHandler (async(req,res)=>{
+
+  //Grab ajax req 
+  const {form_email, pwd, remember} = req.body
+
+  //Check credentials
+  const admin = await Admin_user.find({ email : form_email}).select('_id firstname lastname email password role')
+
+  //Current Admin _id 
+  let admin_id = admin[0]._id.valueOf()
+
+  //No Admin found
+  if(admin.length == 0)  
+    res.send('notFound')
+
+
+  else
+  {
+
+    //CHECK PASSWORD 
+    const check_pwd = await bcrypt.compare(pwd, admin[0].password)
+
+    if(check_pwd == false)
+      res.send('wrong_pwd')
+
+      //Payload Obj
+      const admin_details = {
+        id : admin_id, 
+        fname : admin[0].firstname,
+        lname : admin[0].lastname,
+        email : admin[0].email, 
+        role : admin[0].role
+      }
+
+    //GENERATE JWT WITH TRANSACTION DETAILS IN PAYLOAD
+    const token = generateToken(admin_details, '31d') //1 Month
+
+    //Store token value in localStorage
+    ls.setItem('token_'+admin_id, token)
     
-  })
+    //Create admin cookie 
+    res.cookie("admin_id", admin_id, {maxAge: 1000 * 60 * 44640, httpOnly: true, secure: true }) //1 Month in milliseconds
+    
+
+    //REMEMBER ME SYSTEM 
+    if(remember == 'true') //Remember is being sent as a String from the Front-End
+      if(!req.cookies.remember)
+        res.cookie("remember", admin_id, {maxAge: 1000 * 60 * 525600,httpOnly: true, secure: true }) //1 year
+
+    // if(remember == 'false') //Delete cookie when admin does want to be remembered
+      if(req.cookies.remember) //Return undefined if not found
+        res.clearCookie("remember")
+
+    //RETURN TO HOME 
+    res.send('all good')
+  }
+    
+})//End login system
+
+
+
+
+//--Logout @/logout [POST]
+const Logout = asyncHandler (async(req,res)=>{
+
+  //Grab admin ID
+  const id = req.cookies.admin_id //The cookie will obviously exist 
+
+  //Delete token file 
+  if(ls.getItem('token_'+id))
+    ls.removeItem('token_'+id)
+
+  //Clear cookie 
+  if(req.cookies.admin_id) //Return undefined if not found
+    res.clearCookie("admin_id")
+
+  //Redirect to Admin 
+  res.send('loggedOut')
+
+})
+
+
+//-- @/register [POST]
+const Admin_register = asyncHandler (async(req,res)=>
+{
+
+  //Grab Ajax req variables 
+  const { lname, fname, form_email, form_role, pwd } = req.body
+
+  //Make sure role is either of "Main" or "Viewer"
+  const final_role = (form_role != "Main" && form_role != "Viewer" )? "Viewer":  form_role
+
+  //Harsh pwd 
+  const harshed_pwd = await bcrypt.hash(pwd, 10)
+
+  //console.log(req.body)
+  //Check Current admin role 
+  //const {role} = req.admin_details
+
+  //if(role != "Main")
+    //res.send('unauthorized') //Admin not authorized to register a new USER 
+
+  //Make sure email is unique 
+  const admin_exist = await Admin_user.find({ email: form_email})
+
+  if(admin_exist.length != 0) //Email already exists in the DB 
+    res.send('found') 
+
+  else{
+    
+    try {
+      //Create new db instance 
+      await Admin_user.create({
+        firstname : fname, 
+        lastname : lname,
+        email : form_email,
+        password : harshed_pwd, 
+        role : final_role
+      })
+      
+    } catch (error) {
+        res.send(error)
+    }
+    //
+    res.send('All good')
+    
+  }
+  
+  //Email credentials to the concerned person 
+
+
+})
+
+
+
+
+//========================= FUNCTIONS 
+
+//GENERATE JWT 
+const generateToken = (transaction_details, expiring_time)=>{
+  //Create token 
+  return jwt.sign(transaction_details, process.env.SECRET_KEY, { expiresIn : expiring_time})
+}
+
+//============================
+
+
+
+
+//= = = 
+
+//LOGIN  @ /admin [GET]
+
+const Login = asyncHandler (async(req,res)=>
+{
+
+  //Admin forbidden to see this route when logged in 
+  if(req.cookies.admin_id)
+    if(ls.getItem('token_'+req.cookies.admin_id))
+      res.redirect('/admin/home')
+  
+
+  //Init remembered credentials
+  let admin_email 
+
+  //Check whether remember cookie exist 
+  if(req.cookies.remember)
+  {
+    //Fetch credentials where id stored in cookie
+    const credentials = await Admin_user.findById(req.cookies.remember).select('email -_id')
+    
+    //Grab Email
+    admin_email = credentials.email 
+  }
+    
+  //
+  res.render('admin/login', {admin_email})
+    
+})
 
 
 //Home  @ /admin/home [GET]
@@ -23,8 +203,31 @@ const Login = asyncHandler (async(req,res)=>{
 
 const Home = asyncHandler (async(req,res)=>{
 
+  const { fname, lname, role} = req.admin_details
+
+  //Fetch transaction data
+  const trans_data = await Trans.find().select('-_id user amount trans_id status createdAt')
+
   //
-  res.render('admin/home')
+  let trans_obj = []
+
+  trans_data.forEach((data, index)=>{
+
+    trans_obj.push({
+      id : index+1, //Starting from 0
+      name : data.user.name,
+      number : data.user.number,
+      amount : data.amount,
+      trans_id : data.trans_id,
+      status : data.status,
+      createdAt : data.createdAt,
+
+    })
+  })
+
+
+  //render variables for the view 
+  res.render('admin/home', {fname, lname, role, trans_obj})
 })
 
 
@@ -104,4 +307,4 @@ const Success = asyncHandler (async(req,res)=>{
 
 
 //EXPORT TO ADMIN ROUTES 
-module.exports = { Login, Home, Profile, Users, Register, ForgotPwd, ForgotPwd_otp, Password_reset, Success }
+module.exports = { Login, Log_me_in, Logout, Home, Profile, Users, Register, Admin_register, ForgotPwd, ForgotPwd_otp, Password_reset, Success }

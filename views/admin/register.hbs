@@ -22,23 +22,42 @@
                     <p class="text-center small">Enter your personal details to create account</p>
                   </div>
 
-                  <form class="row g-3 needs-validation" novalidate="">
+                  <form id="registerForm" class="row g-3 needs-validation" method="POST" action="admin/admin_register" novalidate>
                     <div class="col-12">
-                      <label for="yourName" class="form-label">Your Lastname</label>
-                      <input type="text" name="name" class="form-control" id="yourName" required="">
-                      <div class="invalid-feedback">Please, enter your lastname!</div>
+                      <label for="yourName" class="form-label">Lastname</label>
+                      <input type="text" name="lname" class="form-control" required="">
+                      <div class="invalid-feedback">Please, enter a lastname!</div>
                     </div>
 
                     <div class="col-12">
-                      <label for="yourName" class="form-label">Your Firstname</label>
-                      <input type="text" name="name" class="form-control" id="yourName" required="">
-                      <div class="invalid-feedback">Please, enter your firstname!</div>
+                      <label for="yourName" class="form-label">Firstname</label>
+                      <input type="text" name="fname" class="form-control" required="">
+                      <div class="invalid-feedback">Please, enter a firstname!</div>
                     </div>
 
                     <div class="col-12">
-                      <label for="yourEmail" class="form-label">Your Email</label>
-                      <input type="email" name="email" class="form-control" id="yourEmail" required="">
-                      <div class="invalid-feedback">Please enter a valid Email adddress!</div>
+                      <label for="yourEmail" class="form-label">Email</label>
+                      <input type="email" name="email" class="form-control" required="">
+                      <div class="invalid-feedback">Please enter a valid Email!</div>
+                    </div>
+
+                    <div class="col-12">
+                      <label for="yourEmail" class="form-label">Role</label><br />
+                      <select name="role" class="form-select" id="validationCustom04" required>
+                        <option selected disabled value="">Select a role</option>
+                        <option value="Main">Main</option>
+                        <option value="Viewer">Viewer</option>
+                      </select>
+                      {{!-- <div class="form-control ui fluid selection dropdown">
+                        <input class="form-control" type="hidden" name="role" required="" />
+                        <i class="dropdown icon"></i>
+                        <div class="default text">Select a role</div>
+                        <div class="menu">
+                          <div class="item" data-value="Main">Main</div>
+                          <div class="item" data-value="Viewer">Viewer</div>
+                        </div>
+                      </div> --}}
+                      <div class="invalid-feedback">Please select a valid Role</div>
                     </div>
 
                     {{!-- <div class="col-12">
@@ -52,8 +71,8 @@
 
                     <div class="col-12">
                       <label for="yourPassword" class="form-label">Password</label>
-                      <input type="password" name="password" class="form-control" id="yourPassword" required="">
-                      <div class="invalid-feedback">Please enter your password!</div>
+                      <input type="password" name="password" class="form-control" required="">
+                      <div class="invalid-feedback">Please enter a password!</div>
                     </div>
 
                     {{!-- <div class="col-12">

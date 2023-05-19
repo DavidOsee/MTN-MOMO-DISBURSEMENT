@@ -10,9 +10,9 @@ const localStorage = new LocalStorage('./scratch')
 //await bcrypt.compare(password, user.password)
 const Trans_auth = (req, res, next)=>{
 
-    //Get trans_token_id from the user browser 
+    //Get trans_token_id from a particular user  
     const trans_token_id = req.cookies.trans_token_id
-
+    
     const trans_token = localStorage.getItem(`trans_token_${trans_token_id}`) 
     
     //Token does not exist 

@@ -19,7 +19,6 @@
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
  	<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js">
 	</script>
-	<script src="/js/script.js"></script>
 
 
     {{!-- <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico" /> --}}
@@ -35,6 +34,8 @@
 	<link href="/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
 	<link href="/css/admin_style.css" rel="stylesheet" />
 	<link href="/css/style.css" rel="stylesheet" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.css" integrity="sha512-wJgJNTBBkLit7ymC6vvzM1EcSWeM9mmOu+1USHaRBbHkm6W9EgM0HY27+UtUaprntaYQJF75rc8gjxllKs5OIQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	
 	
 	
 </head>
@@ -47,18 +48,43 @@
 			<p>© 2023 | MTN MOBILE MONEY Disbursements integration</p>
 		</center>
 	</footer>
+
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+	<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-P7JSYB1CSP"></script>
+	<script src="/js/script.js"></script>
+
+	{{!-- Admin related scripts --}}
+	<script class="s1"></script>
+	<script class="s2"></script>
+	<script class="s3"></script>
+	<script class="s4"></script>
+	<script class="s5"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.js" integrity="sha512-zlWWyZq71UMApAjih4WkaRpikgY9Bz1oXIW5G0fED4vk14JjGlQ1UmkGM392jEULP8jbNMiwLWdM8Z87Hu88Fw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+	
+
 	<script>
+		if(window.location.pathname.includes('/admin'))
+		{
+			//Insert SCRIPT SRC 
+			$('.s1').attr('src', '/assets/vendor/php-email-form/validate.js')
+			$('.s2').attr('src', '/assets/vendor/simple-datatables/simple-datatables.js')
+			$('.s3').attr('src', '/js/tinymce.min.js')
+			$('.s4').attr('src', '/js/admin.js')
+			$('.s5').attr('src', '/js/myAdmin.js')
+		}
+
 		$('.menu .item')
 		.tab()
 		;
+
+		$('.ui.dropdown')
+		.dropdown()
+		;
+		
 		
 	</script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
-	<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-P7JSYB1CSP"></script>
-	<script src="/assets/vendor/php-email-form/validate.js"></script>
-	<script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
-	<script src="/js/tinymce.min.js"></script>
-	<script src="/js/admin.js"></script>
 	
 	
 	

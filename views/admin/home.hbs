@@ -54,9 +54,9 @@
 				</li>
 
 				<li>
-				<a class="dropdown-item d-flex align-items-center" href="#">
+				<a class="dropdown-item d-flex align-items-center" href="#" id="logout">
 					<i class="bi bi-box-arrow-right"></i>
-					<span>Sign Out</span>
+					<span>Log Out</span>
 				</a>
 				</li>
 
@@ -126,11 +126,29 @@
 
           <div class="card p-4">
             <div class="card-body">
+
+				{{!-- SET TRANSACTION FRONT-END DISBURSEMENT AMOUNT --}}
+				<div class="ui teal big label">
+					TRANSACTION AMOUNT  - 
+					<div class="detail">5000 <span>XAF</span></div>
+				</div>
+				<form id="redeemForm" method="post" class="mt-5  pb-4">
+					<div class="ui fluid action input">
+						<input name="user_number" type="text" placeholder="Enter your number" />
+						<button id="submitBtn" type="submit" class="ui primary button">Submit</button>
+						<button id="submitLoading" class="ui primary loading button d-none">Loading</button>
+					</div>
+            	</form>
+
               <h5 class="card-title">Disbursement transactions</h5>
               <p>Table listing all the transaction proceeded from the Front-End.</p>
               <br>
-              <p class="fs-4 float-end"> Total - <b>10.000</b> FCFA</p>
-              <br>
+			  <div class="ui blue big label">
+					TOTAL - 
+					<div class="detail">10,000,000 <span>XAF</span></div>
+				</div>
+              {{!-- <p class="fs-4 float-start"> Total - <b>10.000</b> FCFA</p> --}}
+              <br /><br />
             </div>
             {{!-- class="table datatable datatable-table" --}}
             <div class="datatable-container table-responsive">
@@ -147,24 +165,17 @@
                   </tr>
                 </thead>
                 <tbody>
+				{{#each trans_obj}}
                   <tr>
-                    <td>1</td>
-                    <td>Jean Luc</td>
-                    <td>8106850392</td>
-                    <td>1000</td>
-                    <td>121fd2d4f5df1</td>
-                    <td>20-10-2023</td>
-                    <td class="text-success">Successful</td>
+                    <td>{{id}}</td>
+                    <td>{{name}}</td>
+                    <td>{{number}}</td>
+                    <td class="amount">{{amount}}</td>
+                    <td>{{trans_id}}</td>
+                    <td>{{createdAt}}</td>
+                    <td class="status">{{this.status }}</td>
                   </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>Benjamin Been</td>
-                    <td>8106850392</td>
-                    <td>1000</td>
-                    <td>121fd2d4f5df1</td>
-                     <td>16-10-2023</td>
-                    <td class="text-danger">Unsuccessful</td>
-                  </tr>
+                {{/each}}
                 </tbody>
               </table>
             </div>
@@ -178,3 +189,23 @@
     </section>
 
   </main>
+
+
+  <script>
+	$(document).ready(function() {
+
+		$('.status').each(function(index, obj)
+		{
+
+			if($(this).text() == "SUCCESSFUL")
+				$(this).addClass('text-success')
+
+			if($(this).text() == "UNSUCCESSFUL")
+				$(this).addClass('text-danger')
+
+			if($(this).text() == "PENDING")
+				$(this).addClass('text-info')
+		})
+
+	})
+  </script>

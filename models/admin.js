@@ -2,7 +2,7 @@
 const mongoose = require('mongoose')
 
 //Create Survey schema 
-const admin_userSchema =  mongoose.Schema({
+const adminSchema =  mongoose.Schema({
     firstname : {
         type : String,
         required : true
@@ -23,11 +23,11 @@ const admin_userSchema =  mongoose.Schema({
     role : { 
         type : String,
         required : true, 
-        default : 'Admin'
+        enum : ['Main', 'Viewer']
     }
 },{
     timestamps : true
 }) 
 
 //EXPORT TO ADMINCONTROLLER 
-module.exports = mongoose.model('Admin_user', admin_userSchema)
+module.exports = mongoose.model('Admin_user', adminSchema)
