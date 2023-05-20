@@ -148,6 +148,27 @@ const Admin_register = asyncHandler (async(req,res)=>
   //Email credentials to the concerned person 
 
 
+}) //End Admin registration system 
+
+
+
+
+//TransFee  @ /admin/transFee [POST]
+//@ Private access 
+
+const TransFee = asyncHandler (async(req,res)=>{
+
+  const { fee } = req.body
+
+  try {
+    //Update amount file
+    ls.setItem('amount', fee)
+    
+  } catch (error) {
+      res.send('error')
+  }
+  //
+  res.send(fee)
 })
 
 
@@ -226,8 +247,18 @@ const Home = asyncHandler (async(req,res)=>{
   })
 
 
+  //Render Transaction fee from amount in localStorage 
+  let ls_amount = " ? "
+  
+  if(ls.getItem('amount'))
+    ls_amount = ls.getItem('amount') 
+
+  //Names in uppercase 
+  fn = fname.toUpperCase()
+  ln = lname.charAt(0).toUpperCase() + ". "
+
   //render variables for the view 
-  res.render('admin/home', {fname, lname, role, trans_obj})
+  res.render('admin/home', {fn, ln, role, ls_amount, trans_obj})
 })
 
 
@@ -307,4 +338,4 @@ const Success = asyncHandler (async(req,res)=>{
 
 
 //EXPORT TO ADMIN ROUTES 
-module.exports = { Login, Log_me_in, Logout, Home, Profile, Users, Register, Admin_register, ForgotPwd, ForgotPwd_otp, Password_reset, Success }
+module.exports = { Login, Log_me_in, Logout, Home, TransFee, Profile, Users, Register, Admin_register, ForgotPwd, ForgotPwd_otp, Password_reset, Success }

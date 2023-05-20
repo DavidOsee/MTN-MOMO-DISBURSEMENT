@@ -9,6 +9,7 @@ const credentials = require('../G_credentials.json')
 //Localstorage
 const LocalStorage = require('node-localstorage').LocalStorage
 const localStorage = new LocalStorage('./scratch')
+const ls = new LocalStorage('./admin_storage')
 
 
 
@@ -18,7 +19,7 @@ const { Disbursements } = momo.create({
 })
 
 //--SET GLOBAL VARIABLE AMOUNT 
-AMOUNT = (localStorage.getItem('amount')) ? localStorage.getItem('amount') : 5000
+AMOUNT = (ls.getItem('amount')) ? ls.getItem('amount') : 5000
 
 
 //Initialising disbursements

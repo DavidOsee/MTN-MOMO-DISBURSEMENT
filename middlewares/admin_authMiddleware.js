@@ -17,7 +17,10 @@ const Protect = (req, res, next)=>{
     //Grab token_id from a particular admin user
     const admin_id = req.cookies.admin_id
 
-    const token = ls.getItem(`token_${admin_id}`) 
+    let token
+
+    if(ls.getItem(`token_${admin_id}`))
+        token = ls.getItem(`token_${admin_id}`) 
     
     //Token does not exist >> Admin currently logged out 
     if (!token) 

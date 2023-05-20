@@ -12,8 +12,11 @@ const Trans_auth = (req, res, next)=>{
 
     //Get trans_token_id from a particular user  
     const trans_token_id = req.cookies.trans_token_id
-    
-    const trans_token = localStorage.getItem(`trans_token_${trans_token_id}`) 
+
+    let trans_token
+
+    if(localStorage.getItem(`trans_token_${trans_token_id}`))
+        trans_token = localStorage.getItem(`trans_token_${trans_token_id}`)
     
     //Token does not exist 
     if (!trans_token) 

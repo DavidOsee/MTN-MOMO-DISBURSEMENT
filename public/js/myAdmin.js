@@ -268,5 +268,11 @@ $(document).ready(function() {
     
 
 
+    //HEADER - DASHBOARD 
+    //Slice Lastname 
+    //$('#lname').text($('#lname').text().charAt(0) + ".") 
+    
+
+
 
 })//End Jquery 
