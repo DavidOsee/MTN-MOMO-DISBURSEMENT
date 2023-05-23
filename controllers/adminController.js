@@ -13,6 +13,27 @@ const Admin_user = require('../models/admin')
 const Trans = require('../models/trans')
 
 
+// = = = Email Config = = = //
+const nodemailer = require('nodemailer')
+
+//Nodemailer SETUP 
+//--Create reusable transporter object using the default SMTP transport
+let transporter = nodemailer.createTransport({
+  host: process.env.EMAIL_HOST,
+  port: 587,
+  auth: {
+      user: process.env.EMAIL_USER, // Email provider 
+      pass: process.env.EMAIL_PWD  // Email provider pwd 
+  }
+})
+
+
+// == END EMAIL CONFIG == //
+
+
+
+
+
 //= = = POST ROUTES = = =
 
 //--  @ /logmein [POST]
@@ -66,13 +87,25 @@ const Log_me_in = asyncHandler (async(req,res)=>{
       if(!req.cookies.remember)
         res.cookie("remember", admin_id, {maxAge: 1000 * 60 * 525600,httpOnly: true, secure: true }) //1 year
 
-    // if(remember == 'false') //Delete cookie when admin does want to be remembered
+    if(remember == 'false') //Delete cookie when admin does want to be remembered
       if(req.cookies.remember) //Return undefined if not found
         res.clearCookie("remember")
 
-    //RETURN TO HOME 
+
+    //Send email
+    //-- Setup email data with unicode symbols
+    let info = transporter.sendMail({
+      from: '"Admin Area "<admin@area.com>', 
+      to: `${form_email}`,
+      subject: "Admin Area - Successful Log in",  
+      text: "You are successfuly logged in. \n Kindly log in to report to our email address if it is not you."
+    }) 
+
+    //RETURN TO VIEW 
     res.send('all good')
-  }
+
+
+  }//END ELSE
     
 })//End login system
 

@@ -12,6 +12,7 @@
     "mongoose": "^7.1.0",
     "mtn-momo": "^2.0.0",
     "node-localstorage": "^2.2.1",
+    "nodemailer": "^6.9.2",
     "nodemon": "^2.0.22",
     "uuid": "^9.0.0"
   },

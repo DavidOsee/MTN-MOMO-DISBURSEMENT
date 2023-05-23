@@ -100,7 +100,8 @@ $(document).ready(function() {
                         //Allow form submission 
                         setTimeout(function(){
                             //
-                            window.location = 'admin/home'
+                            console.log(res)
+                            //window.location = 'admin/home'
                             
                        }, 1000);
                        
