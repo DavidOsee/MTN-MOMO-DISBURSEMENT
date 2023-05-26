@@ -101,7 +101,7 @@ $(document).ready(function() {
                         setTimeout(function(){
                             //
                             console.log(res)
-                            //window.location = 'admin/home'
+                            window.location = 'admin/home'
                             
                        }, 1000);
                        
@@ -208,7 +208,7 @@ $(document).ready(function() {
                     else if(res == 'unauthorized'){
                         $.toast({
                             heading: 'Access denied',
-                            text: 'You are not allowed to register an Admin',
+                            text: 'You are not allowed to register a new User',
                             position: 'top-right',
                             icon: 'warning',
                             hideAfter: 5000,
@@ -273,7 +273,6 @@ $(document).ready(function() {
     //Slice Lastname 
     //$('#lname').text($('#lname').text().charAt(0) + ".") 
     
-
 
 
 })//End Jquery 

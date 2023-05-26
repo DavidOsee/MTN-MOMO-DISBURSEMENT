@@ -3,6 +3,7 @@ const asyncHandler = require('express-async-handler')
 const momo = require("mtn-momo")
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
+const uuid = require('uuid')
 
 //Localstorage
 const LocalStorage = require('node-localstorage').LocalStorage
@@ -53,7 +54,6 @@ const Log_me_in = asyncHandler (async(req,res)=>{
   if(admin.length == 0)  
     res.send('notFound')
 
-
   else
   {
 
@@ -76,10 +76,12 @@ const Log_me_in = asyncHandler (async(req,res)=>{
     const token = generateToken(admin_details, '31d') //1 Month
 
     //Store token value in localStorage
-    ls.setItem('token_'+admin_id, token)
+    //--Set a uniq UUID value representing the User's DEVICE LOGIN SESSION 
+    const token_uid = uuid.v4().slice(0,8)
+    ls.setItem('token_'+token_uid, token)
     
     //Create admin cookie 
-    res.cookie("admin_id", admin_id, {maxAge: 1000 * 60 * 44640, httpOnly: true, secure: true }) //1 Month in milliseconds
+    res.cookie("admin_id", token_uid, {maxAge: 1000 * 60 * 44640, httpOnly: true, secure: true }) //1 Month in milliseconds
     
 
     //REMEMBER ME SYSTEM 
@@ -94,12 +96,12 @@ const Log_me_in = asyncHandler (async(req,res)=>{
 
     //Send email
     //-- Setup email data with unicode symbols
-    let info = transporter.sendMail({
-      from: '"Admin Area "<admin@area.com>', 
-      to: `${form_email}`,
-      subject: "Admin Area - Successful Log in",  
-      text: "You are successfuly logged in. \n Kindly log in to report to our email address if it is not you."
-    }) 
+    // let info = transporter.sendMail({
+    //   from: '"Admin Area "<admin@area.com>', 
+    //   to: `${form_email}`,
+    //   subject: "Admin Area - Successful Log in",  
+    //   text: "You are successfuly logged in. \n Kindly log in to report to our email address if it is not you."
+    // }) 
 
     //RETURN TO VIEW 
     res.send('all good')
@@ -145,12 +147,13 @@ const Admin_register = asyncHandler (async(req,res)=>
   //Harsh pwd 
   const harshed_pwd = await bcrypt.hash(pwd, 10)
 
-  //console.log(req.body)
+  
   //Check Current admin role 
-  //const {role} = req.admin_details
+  const {role} = req.admin_details
 
-  //if(role != "Main")
-    //res.send('unauthorized') //Admin not authorized to register a new USER 
+
+  if(role != "Main")
+    res.send('unauthorized') //Admin not authorized to register a new USER 
 
   //Make sure email is unique 
   const admin_exist = await Admin_user.find({ email: form_email})
@@ -173,6 +176,19 @@ const Admin_register = asyncHandler (async(req,res)=>
     } catch (error) {
         res.send(error)
     }
+
+    //Email User thier credenials 
+    //Send email
+    //-- Setup email data with unicode symbols
+    transporter.sendMail({
+      from: '"Admin Area "<admin@area.com>', 
+      to: `${form_email}`,
+      subject: "Admin Area - Admin user account",  
+      // text: 'Greeting !'+fname,
+      html: `<h2>An <b>Admin Area</b> account has been opened on your behalf, Kindly use the following credentials to be able to login.</h2> <br /> <h4>Email - ${form_email} <h4> <h4>Password - ${pwd} <h4>`
+    }) 
+
+
     //
     res.send('All good')
     
@@ -203,6 +219,47 @@ const TransFee = asyncHandler (async(req,res)=>{
   //
   res.send(fee)
 })
+
+
+
+
+//Delete Admin User 
+
+//Delete_user  @ /admin/delete [POST]
+//@ Private access 
+
+const Delete_user = asyncHandler (async(req,res)=>{
+
+  const { user_id } = req.body
+
+  //Check Current admin role 
+  const {role} = req.admin_details
+
+  if(role != "Main")
+    res.send('unauthorized') //Admin not authorized to delete USER 
+  
+  else
+  {
+    //Check validity of user_id 
+    if((typeof user_id) != 'string') 
+      res.send('Error')
+    
+    else{
+      //Delete User from DB 
+      try {
+        //
+        await Admin_user.findByIdAndDelete(user_id) 
+        res.status(200).send('all good')
+
+      } catch (error) {
+        res.send('Error')
+      }
+    }
+  }//End Authorized User 
+
+
+})
+
 
 
 
@@ -274,7 +331,7 @@ const Home = asyncHandler (async(req,res)=>{
       amount : data.amount,
       trans_id : data.trans_id,
       status : data.status,
-      createdAt : data.createdAt,
+      createdAt : data.createdAt
 
     })
   })
@@ -302,8 +359,15 @@ const Home = asyncHandler (async(req,res)=>{
 
 const Profile = asyncHandler (async(req,res)=>{
 
+  //Grabing payload for the view <header>
+  const { fname, lname, role} = req.admin_details
+
+  //Names in uppercase 
+  fn = fname.toUpperCase()
+  ln = lname.charAt(0).toUpperCase() + ". "
+
   //
-  res.render('admin/profile')
+  res.render('admin/profile', {fn, ln, role})
 })
 
 
@@ -313,8 +377,32 @@ const Profile = asyncHandler (async(req,res)=>{
 
 const Users = asyncHandler (async(req,res)=>{
 
+  //Grabing payload for the view <header>
+  const { fname, lname, role} = req.admin_details
+
+  //Fetching admin users 
+  const admin_users = await Admin_user.find().select('_id firstname lastname role createdAt').sort({createdAt : -1}).exec()
+
+  //Arrange Obj data for the view
+  let users = []
+  admin_users.forEach((user,index)=>{
+
+    users.push({
+      id : user._id.valueOf(),
+      firstname : user.firstname,
+      lastname : user.lastname,
+      role : user.role,
+      createdAt : user.createdAt
+    })
+  })
+
+
+  //Names in uppercase 
+  fn = fname.toUpperCase()
+  ln = lname.charAt(0).toUpperCase() + ". "
+
   //
-  res.render('admin/users')
+  res.render('admin/users', {fn, ln, role, users})
 })
 
 
@@ -359,16 +447,6 @@ const Password_reset = asyncHandler (async(req,res)=>{
 })
 
 
-//SUCCESS @ /admin/success [GET]
-//@ Private access 
-
-const Success = asyncHandler (async(req,res)=>{
-
-  //
-  res.render('admin/success')
-})
-
-
 
 //EXPORT TO ADMIN ROUTES 
-module.exports = { Login, Log_me_in, Logout, Home, TransFee, Profile, Users, Register, Admin_register, ForgotPwd, ForgotPwd_otp, Password_reset, Success }
+module.exports = { Login, Log_me_in, Logout, Home, TransFee, Profile, Users, Register, Admin_register, Delete_user, ForgotPwd, ForgotPwd_otp, Password_reset }

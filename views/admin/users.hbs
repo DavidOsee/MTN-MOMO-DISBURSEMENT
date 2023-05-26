@@ -143,28 +143,21 @@
             <th scope="col">Full name</th>
             <th scope="col">Role</th>
             <th scope="col">Joined on</th>
-            <th scope="col">Actions</th>
+            <th scope="col">Action</th>
             </tr>
         </thead>
         <tbody>
+			{{#each users}}
             <tr>
-                <th scope="row"><a href="#"><img src="https://eu.ui-avatars.com/api/?name=Benjamin+Lucas&size=30" alt=""></a></th>
-                <td>Petter Kouabinaki</td>
-                <td>Main Admin</td>
-                <td>05-01-2022</td>
+                <td scope="row"><a href="#"><img src="https://eu.ui-avatars.com/api/?name={{firstname}}+{{lastname}}&size=30" alt="avatar"></a></td>
+                <td>{{firstname }} {{lastname}}</td>
+                <td> {{role}} </td>
+                <td class="createdAt"> {{createdAt}} </td>
                 <td class="fw-bold">
-                    <a href="#" class="btn btn-danger"><i class="bi bi-trash"></i></a>
+                    <a href="#" data-bs-id="{{id}}" class="btn btn-danger delete_admin" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-trash"></i></a>
                 </td>
             </tr>
-            <tr>
-                <th scope="row"><a href="#"><img src="https://eu.ui-avatars.com/api/?name=Benjamin+Lucas&size=30" alt=""></a></th>
-                <td>Benjamin Lucas</td>
-                <td>Guest</td>
-                <td>10-03-2023</td>
-                <td class="fw-bold">
-                    <a href="#" class="btn btn-danger"><i class="bi bi-trash"></i></a>
-                </td>
-            </tr>
+			{{/each}}
         </tbody>
         </table>
 
@@ -173,4 +166,116 @@
     </div>
 </div>
 
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Action required</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"></button>
+      </div>
+      <div class="modal-body">
+        Do you really want to delete this Admin User?
+      </div>
+	  <input type="hidden" value="" id="user_id" />
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary yes">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 </main>
+
+
+
+<script>
+	//Date formating 
+	$('.createdAt').each(function(index, obj)
+	{
+		$(this).text($(this).text().slice(0,17))
+	})
+
+
+
+	//= = MODAL = = 
+	$('#exampleModal').on('show.bs.modal', (e)=> 
+	{
+		// Button that triggered the modal
+		const button = e.relatedTarget
+
+		// Extract info from data-bs-* attributes
+		const id = button.getAttribute('data-bs-id')
+
+		//Insert user_id input value 
+		$('#user_id').val(id)
+		
+	})
+
+
+	//Manage on click 'YES' - MODAL
+	$('.yes').on('click', ()=>
+	{
+		//Send to the server for further treatment  
+		$.ajax({
+			type: 'POST',
+			url: '/admin/delete', 
+			data: { 
+				user_id : $('#user_id').val()
+			},
+			success: function(res)
+			{
+				console.log(res)
+				if(res == 'all good')
+				{
+					$.toast({
+						heading: 'Success',
+						text: 'Admin user deleted successfuly',
+						position: 'top-right',
+						icon: 'success',
+						hideAfter: 3500,
+						loader: true, 
+						stack: false
+					})
+					//Delay page reload 
+					setTimeout(function(){
+						window.location = 'users'
+						
+					}, 3000)
+				}
+				else if(res == 'unauthorized'){
+					$.toast({
+						heading: 'Access denied',
+						text: 'You are not allowed to delete a User',
+						position: 'top-right',
+						icon: 'warning',
+						hideAfter: 5000,
+						loader: true, 
+						stack: false
+					})
+                }
+				else 
+				{
+					$.toast({
+						heading: 'Error',
+						text: 'Something went wrong, Please try again',
+						position: 'top-right',
+						icon: 'error',
+						hideAfter: 5000,
+						loader: true, 
+						stack: false
+					})
+				}
+					
+			}, error: function(e){
+				console.log(e)
+			}
+		})//End Ajax
+		
+	}) //End YES EVENT 
+
+
+</script>

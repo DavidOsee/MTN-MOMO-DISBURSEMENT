@@ -195,14 +195,14 @@ const GetPaid = asyncHandler (async(req,res)=>
         const trans_token = generateToken(transaction_details, '120s') //2min 
   
         //WRITE TOKEN IN SERVER LOCALSTORAGE 
-        const token_id = uuid.v4().slice(0,8) //Sonme id to diff each trans_token 
+        //const token_id = uuid.v4().slice(0,8) //Sonme id to diff each trans_token 
   
         //--Store token_id into user's cookies 
-        res.cookie("trans_token_id", token_id, {httpOnly: true, secure: true }) //Expires when browser closes 
+        res.cookie("trans_token_id", user_number, {httpOnly: true, secure: true }) //Expires when browser closes 
   
         //Write JWT in SERVER LOCALSTORAGE
         //--Storing it in a file to handle "Token use completed" coz we can not expire a JWT
-        localStorage.setItem('trans_token_'+token_id.toString(), trans_token)
+        localStorage.setItem('trans_token_'+user_number.toString(), trans_token)
         
         //REDIRECT
         res.send('all good')
