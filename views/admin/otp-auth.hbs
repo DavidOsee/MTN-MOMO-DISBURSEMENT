@@ -23,20 +23,21 @@
                 <p class="text-center small">Enter OTP sent to your email address.</p>
               </div>
 
-              <form class="row g-3 needs-validation">
+              <form id="validateForm" class="row g-3 needs-validation" novalidate>
 
                 <div class="col-12">
                   <label for="yourUsername" class="form-label">OTP</label>
                   <div class="input has-validation">
                     {{!-- <span class="input-group-text" id="inputGroupPrepend">@</span> --}}
-                    <input type="text" name="username" class="form-control" id="yourUsername" required="">
+                    <input type="text" name="otp" class="form-control" required="">
                     <div class="invalid-feedback">Please enter the OTP number.</div>
                   </div>
                 </div>
 
                
                 <div class="col-12">
-                  <button class="btn btn-primary w-100" type="submit">Validate</button>
+                  <button id="validateLoading" class="ui primary w-100 loading button d-none">Loading</button>
+                  <button id="validateBtn" class="btn btn-primary w-100" type="submit">Validate</button>
                 </div>
                 {{!-- <div class="col-12">
                   <p class="small mb-0">Don't have account? <a href="pages-register.html">Create an account</a></p>
@@ -64,3 +65,85 @@
   </section>
 
 </div>
+
+
+<script>
+  //Form validation  
+    $('#validateForm').on('submit', (e)=>
+    {
+        e.preventDefault()
+
+        //Convert input value toString()
+        let form_otp = $('[name=otp]').val()
+    
+        //Empty FORM
+        if(form_otp == "" || form_otp.length != 6 ){
+          $.toast({
+              heading: 'Error',
+              text: 'Please enter a valid OTP',
+              position: 'top-right',
+              icon: 'error',
+              hideAfter: 4000,
+              loader: true, 
+              stack: false
+          })
+        }
+
+        else
+        {
+          //Send to the server for further troubleshooting 
+          $.ajax({
+              type: 'POST',
+              url: '/admin/validateOTP',
+              data: { 
+                  form_otp 
+              },
+              success: function(res)
+              {
+                  console.log(res)
+                  //return false
+                  if(res == 'wrong'){
+                      $.toast({
+                          heading: 'Warning',
+                          text: "Wrong OTP. Please try again",
+                          position: 'top-right',
+                          icon: 'warning',
+                          hideAfter: 7000,
+                          loader: true, 
+                          stack: false
+                      })
+                  }
+                  else
+                  {
+                    //$.toast({
+                       // heading: 'Check your email',
+                        //text: 'An OTP has been sent to your address',
+                       // position: 'top-right',
+                       // icon: 'success',
+                       // hideAfter: 4000,
+                       // loader: true, 
+                      //  stack: false
+                   // })
+
+                   //Btn swap 
+                  $('#validateBtn').addClass('d-none')
+                  $('#validateLoading').removeClass('d-none')
+
+                  //Delay redirection 
+                  setTimeout(function(){
+                    //
+                    window.location = '/admin/password-reset'
+                      
+                  }, 2100);
+                      
+                  }
+                      
+              }, error: function(e){
+                  console.log(e)
+              }
+          })//End Ajax
+        }
+        
+
+    }) //End Login Form submission 
+</script>

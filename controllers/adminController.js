@@ -47,8 +47,6 @@ const Log_me_in = asyncHandler (async(req,res)=>{
   //Check credentials
   const admin = await Admin_user.find({ email : form_email}).select('_id firstname lastname email password role')
 
-  //Current Admin _id 
-  let admin_id = admin[0]._id.valueOf()
 
   //No Admin found
   if(admin.length == 0)  
@@ -56,6 +54,9 @@ const Log_me_in = asyncHandler (async(req,res)=>{
 
   else
   {
+
+    //Current Admin _id 
+    let admin_id = admin[0]._id.valueOf()
 
     //CHECK PASSWORD 
     const check_pwd = await bcrypt.compare(pwd, admin[0].password)
@@ -185,7 +186,7 @@ const Admin_register = asyncHandler (async(req,res)=>
       to: `${form_email}`,
       subject: "Admin Area - Admin user account",  
       // text: 'Greeting !'+fname,
-      html: `<h2>An <b>Admin Area</b> account has been opened on your behalf, Kindly use the following credentials to be able to login.</h2> <br /> <h4>Email - ${form_email} <h4> <h4>Password - ${pwd} <h4>`
+      html: `<h4>An <b>Admin Area</b> account has been opened on your behalf, Kindly use the following credentials to be able to login.</h4> <br /> <h2>Email - ${form_email} <h2> <h2>Password - ${pwd} <h2>`
     }) 
 
 
@@ -262,6 +263,140 @@ const Delete_user = asyncHandler (async(req,res)=>{
 
 
 
+
+
+
+
+
+const SendOTP = asyncHandler (async(req,res)=>
+{
+
+  //Grab ajax req 
+  const { form_email } = req.body
+
+  //Check credentials
+  const admin = await Admin_user.find({ email : form_email}).select('_id email')
+
+  //No Admin found
+  if(admin.length == 0)  
+    res.send('notFound')
+
+  else
+  {
+    //Current Admin _id 
+    let admin_id = admin[0]._id.valueOf()
+
+    //Gen OTP
+    let otp = uuid.v4().slice(0,6) //Math.floor((Math.random() * 100) + 926530);
+
+    //Payload Obj
+    const payload = { email : admin[0].email, otp }
+
+    //GENERATE JWT WITH TRANSACTION DETAILS IN PAYLOAD
+    const reset_token = generateToken(payload, '600000ms') //10min
+
+    //Store token value in localStorage
+    //--Set a uniq UUID value representing the User's DEVICE LOGIN SESSION 
+    const _uid = uuid.v4().slice(0,8)
+    ls.setItem('resetToken_'+_uid, reset_token)
+    
+    //Create admin cookie 
+    res.cookie("reset_id", _uid, {maxAge: 600000, httpOnly: true, secure: true }) //10min in milliseconds
+
+
+    //Mailling User the OTP 
+    //-- Setup email data with unicode symbols
+    transporter.sendMail({
+      from: '"Admin Area "<admin@area.com>', 
+      to: `${form_email}`,
+      subject: "Admin Area - Password reset",  
+      html: `<h3>${otp.toUpperCase()}</h3><h4> is the OTP (one time password) for your password reset request.<h4>In case you have not initiated this request, please report it at the earliest</h4>`
+    }) 
+
+    //RETURN TO VIEW 
+    res.send('all good')
+
+
+  }//END SendOTP
+    
+})//End 
+
+
+
+
+
+const ValidateOTP = asyncHandler (async(req,res)=>
+{
+
+  //Grab ajax req 
+  const { form_otp } = req.body
+
+  //Grab payload 
+  const { otp } = req.reset_token
+
+  //Compare OTP VALUES 
+  if(form_otp != otp.toUpperCase())
+    res.send('wrong')
+  
+  else 
+    res.send('all good')
+
+    
+})//End ValidateOTP
+
+
+
+
+const ResetPwd = asyncHandler (async(req,res)=>
+{
+
+  //Grab ajax req 
+  const { new_pwd } = req.body
+
+  //Grab payload 
+  const { email } = req.reset_token
+
+  //Update DB Pwd where email 
+  try {
+    //Bcrypot pwd 
+    let pwd = await bcrypt.hash(new_pwd, 10)  
+
+    //Create new db instance 
+    await Admin_user.findOneAndUpdate({ password : pwd})
+    
+  } catch (error) {
+      res.send('error')
+  }
+
+  //Inform User 
+  //Send email
+  //-- Setup email data with unicode symbols
+  // transporter.sendMail({
+  //   from: '"Admin Area "<admin@area.com>', 
+  //   to: `${form_email}`,
+  //   subject: "Admin Area - Admin user account",  
+  //   // text: 'Greeting !'+fname,
+  //   html: `<h4>An <b>Admin Area</b> account has been opened on your behalf, Kindly use the following credentials to be able to login.</h4> <br /> <h2>Email - ${form_email} <h2> <h2>Password - ${pwd} <h2>`
+  // }) 
+
+
+  //Grab admin ID
+  const id = req.cookies.reset_id //The cookie will obviously exist 
+
+  //Delete token file 
+  if(ls.getItem('resetToken_'+id))
+    ls.removeItem('resetToken_'+id)
+
+  //Clear cookie 
+  if(req.cookies.reset_id) //Return undefined if not found
+    res.clearCookie("reset_id")
+
+
+  //
+  res.send('All good')
+  
+
+})//End ResetPwd
 
 
 //========================= FUNCTIONS 
@@ -449,4 +584,4 @@ const Password_reset = asyncHandler (async(req,res)=>{
 
 
 //EXPORT TO ADMIN ROUTES 
-module.exports = { Login, Log_me_in, Logout, Home, TransFee, Profile, Users, Register, Admin_register, Delete_user, ForgotPwd, ForgotPwd_otp, Password_reset }
+module.exports = { Login, Log_me_in, Logout, Home, TransFee, Profile, Users, Register, Admin_register, Delete_user, ForgotPwd, ForgotPwd_otp, Password_reset, SendOTP, ValidateOTP, ResetPwd }

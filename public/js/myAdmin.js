@@ -42,10 +42,10 @@ $(document).ready(function() {
             if(validateEmail(email) == false)
             {
                 $.toast({
-                    heading: 'Error',
+                    heading: 'Warning',
                     text: 'Please check your email',
                     position: 'top-right',
-                    icon: 'error',
+                    icon: 'warning',
                     hideAfter: 5000,
                     loader: true, 
                     stack: false
@@ -265,14 +265,6 @@ $(document).ready(function() {
         })//End Ajax
     })
         
-
-    
-
-
-    //HEADER - DASHBOARD 
-    //Slice Lastname 
-    //$('#lname').text($('#lname').text().charAt(0) + ".") 
-    
 
 
 })//End Jquery 
