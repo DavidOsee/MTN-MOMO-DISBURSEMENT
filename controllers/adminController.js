@@ -63,7 +63,9 @@ const Log_me_in = asyncHandler (async(req,res)=>{
 
     if(check_pwd == false)
       res.send('wrong_pwd')
-
+    
+    else 
+    {
       //Payload Obj
       const admin_details = {
         id : admin_id, 
@@ -73,40 +75,40 @@ const Log_me_in = asyncHandler (async(req,res)=>{
         role : admin[0].role
       }
 
-    //GENERATE JWT WITH TRANSACTION DETAILS IN PAYLOAD
-    const token = generateToken(admin_details, '31d') //1 Month
+      //GENERATE JWT WITH TRANSACTION DETAILS IN PAYLOAD
+      const token = generateToken(admin_details, '31d') //1 Month
 
-    //Store token value in localStorage
-    //--Set a uniq UUID value representing the User's DEVICE LOGIN SESSION 
-    const token_uid = uuid.v4().slice(0,8)
-    ls.setItem('token_'+token_uid, token)
-    
-    //Create admin cookie 
-    res.cookie("admin_id", token_uid, {maxAge: 1000 * 60 * 44640, httpOnly: true, secure: true }) //1 Month in milliseconds
-    
+      //Store token value in localStorage
+      //--Set a uniq UUID value representing the User's DEVICE LOGIN SESSION 
+      const token_uid = uuid.v4().slice(0,8)
+      ls.setItem('token_'+token_uid, token)
+      
+      //Create admin cookie 
+      res.cookie("admin_id", token_uid, {maxAge: 1000 * 60 * 44640, httpOnly: true, secure: true }) //1 Month in milliseconds
+      
 
-    //REMEMBER ME SYSTEM 
-    if(remember == 'true') //Remember is being sent as a String from the Front-End
-      if(!req.cookies.remember)
+      //REMEMBER ME SYSTEM 
+      if(remember == 'true') //Remember is being sent as a String from the Front-End
+        //if(!req.cookies.remember)
         res.cookie("remember", admin_id, {maxAge: 1000 * 60 * 525600,httpOnly: true, secure: true }) //1 year
 
-    if(remember == 'false') //Delete cookie when admin does want to be remembered
-      if(req.cookies.remember) //Return undefined if not found
-        res.clearCookie("remember")
+      if(remember == 'false') //Delete cookie when admin does want to be remembered
+        if(req.cookies.remember) //Return undefined if not found
+          res.clearCookie("remember")
 
 
-    //Send email
-    //-- Setup email data with unicode symbols
-    // let info = transporter.sendMail({
-    //   from: '"Admin Area "<admin@area.com>', 
-    //   to: `${form_email}`,
-    //   subject: "Admin Area - Successful Log in",  
-    //   text: "You are successfuly logged in. \n Kindly log in to report to our email address if it is not you."
-    // }) 
+      //Send email
+      //-- Setup email data with unicode symbols
+      // let info = transporter.sendMail({
+      //   from: '"Admin Area "<admin@area.com>', 
+      //   to: `${form_email}`,
+      //   subject: "Admin Area - Successful Log in",  
+      //   text: "You are successfuly logged in. \n Kindly log in to report to our email address if it is not you."
+      // }) 
 
-    //RETURN TO VIEW 
-    res.send('all good')
-
+      //RETURN TO VIEW 
+      res.send('all good')
+    }
 
   }//END ELSE
     
@@ -122,7 +124,7 @@ const Logout = asyncHandler (async(req,res)=>{
   const id = req.cookies.admin_id //The cookie will obviously exist 
 
   //Delete token file 
-  if(ls.getItem('token_'+id))
+  if(ls.getItem('token_'+id) != null)
     ls.removeItem('token_'+id)
 
   //Clear cookie 
@@ -194,8 +196,6 @@ const Admin_register = asyncHandler (async(req,res)=>
     res.send('All good')
     
   }
-  
-  //Email credentials to the concerned person 
 
 
 }) //End Admin registration system 
@@ -234,7 +234,7 @@ const Delete_user = asyncHandler (async(req,res)=>{
   const { user_id } = req.body
 
   //Check Current admin role 
-  const {role} = req.admin_details
+  const {id, role} = req.admin_details
 
   if(role != "Main")
     res.send('unauthorized') //Admin not authorized to delete USER 
@@ -244,6 +244,10 @@ const Delete_user = asyncHandler (async(req,res)=>{
     //Check validity of user_id 
     if((typeof user_id) != 'string') 
       res.send('Error')
+
+    //Logged in Admin trying to delete his own account 
+    else if(user_id == id)
+      res.send('deleteMyAccount')
     
     else{
       //Delete User from DB 
@@ -362,7 +366,7 @@ const ResetPwd = asyncHandler (async(req,res)=>
     let pwd = await bcrypt.hash(new_pwd, 10)  
 
     //Create new db instance 
-    await Admin_user.findOneAndUpdate({ password : pwd})
+    await Admin_user.findOneAndUpdate({ password : pwd}, { new: true })
     
   } catch (error) {
       res.send('error')
@@ -384,7 +388,7 @@ const ResetPwd = asyncHandler (async(req,res)=>
   const id = req.cookies.reset_id //The cookie will obviously exist 
 
   //Delete token file 
-  if(ls.getItem('resetToken_'+id))
+  if(ls.getItem('resetToken_'+id) != null)
     ls.removeItem('resetToken_'+id)
 
   //Clear cookie 
@@ -421,7 +425,7 @@ const Login = asyncHandler (async(req,res)=>
 
   //Admin forbidden to see this route when logged in 
   if(req.cookies.admin_id)
-    if(ls.getItem('token_'+req.cookies.admin_id))
+    if(ls.getItem('token_'+req.cookies.admin_id) != null)
       res.redirect('/admin/home')
   
 
@@ -474,8 +478,9 @@ const Home = asyncHandler (async(req,res)=>{
 
   //Render Transaction fee from amount in localStorage 
   let ls_amount = " ? "
+
   
-  if(ls.getItem('amount'))
+  if(ls.getItem('amount') != null)
     ls_amount = ls.getItem('amount') 
 
   //Names in uppercase 
@@ -495,14 +500,14 @@ const Home = asyncHandler (async(req,res)=>{
 const Profile = asyncHandler (async(req,res)=>{
 
   //Grabing payload for the view <header>
-  const { fname, lname, role} = req.admin_details
+  const { fname, lname, role, email} = req.admin_details
 
   //Names in uppercase 
   fn = fname.toUpperCase()
   ln = lname.charAt(0).toUpperCase() + ". "
 
   //
-  res.render('admin/profile', {fn, ln, role})
+  res.render('admin/profile', { fn, ln, fname, lname, role, email })
 })
 
 
@@ -583,5 +588,50 @@ const Password_reset = asyncHandler (async(req,res)=>{
 
 
 
+
+
+
+
+
+//SELF ACCOUNT DELETION @ /accountDelete [GET]
+//@ Private access 
+
+const SelfAccountDeleted = asyncHandler (async(req,res)=>
+{
+  //LOG USER OUT AFTER DELETING THEIR ACCOUNT 
+
+  //Grab admin ID
+  const user_id = req.cookies.admin_id //The cookie will obviously exist 
+
+  //Fetch Current User _id
+  const { id } = req.admin_details
+
+  //Delete token file 
+  if(ls.getItem('token_'+user_id) != null)
+    ls.removeItem('token_'+user_id)
+
+  //Clear cookie 
+  if(req.cookies.admin_id) //Return undefined if not found
+    res.clearCookie("admin_id")
+  
+  if(req.cookies.remember) //Return undefined if not found
+  res.clearCookie("remember")
+
+
+  //Delete User from DB 
+  try {
+    //
+    await Admin_user.findByIdAndDelete(id) 
+    //
+    res.redirect('/admin')
+
+  } catch (error) {
+    console.log(error)
+  }
+
+})
+
+
+
 //EXPORT TO ADMIN ROUTES 
-module.exports = { Login, Log_me_in, Logout, Home, TransFee, Profile, Users, Register, Admin_register, Delete_user, ForgotPwd, ForgotPwd_otp, Password_reset, SendOTP, ValidateOTP, ResetPwd }
+module.exports = { Login, Log_me_in, Logout, Home, TransFee, Profile, Users, Register, Admin_register, Delete_user, ForgotPwd, ForgotPwd_otp, Password_reset, SendOTP, ValidateOTP, ResetPwd, SelfAccountDeleted }

@@ -139,9 +139,9 @@
           <div class="card">
             <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
 
-              <img src="https://eu.ui-avatars.com/api/?name=Benjamin+Lucas&size=250" alt="Profile" class="rounded-circle">
-              <h2>Kevin Anderson</h2>
-              <h3>Main Admin</h3>
+              <img src="https://eu.ui-avatars.com/api/?name={{fn}}+{{ln}}&size=250" alt="Profile" class="rounded-circle">
+              <h2>{{fname}} {{lname}}</h2>
+              <h3>{{role}} Admin</h3>
             </div>
           </div>
 
@@ -174,17 +174,17 @@
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label ">Last Name</div>
-                    <div class="col-lg-9 col-md-8">Anderson</div>
+                    <div class="col-lg-9 col-md-8">{{lname}}</div>
                   </div>
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label ">First Name</div>
-                    <div class="col-lg-9 col-md-8">Kevin</div>
+                    <div class="col-lg-9 col-md-8">{{fname}}</div>
                   </div>
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label">Email</div>
-                    <div class="col-lg-9 col-md-8">k.anderson@example.com</div>
+                    <div class="col-lg-9 col-md-8">{{email}}</div>
                   </div>
 
                 </div>
@@ -192,7 +192,8 @@
                 <div class="tab-pane fade profile-edit pt-3" id="profile-edit" role="tabpanel">
 
                   <!-- Profile Edit Form -->
-                  <form>
+                  <form id="updateForm" method="POST">
+
                     {{!-- <div class="row mb-3">
                       <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
                       <div class="col-md-8 col-lg-9">
@@ -207,32 +208,32 @@
                     <div class="row mb-3">
                       <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Last Name</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="fullName" type="text" class="form-control" id="fullName" value="Anderson">
+                        <input name="lname" type="text" class="form-control" value="{{lname}}" />
                       </div>
                     </div>
 
                     <div class="row mb-3">
                       <label for="fullName" class="col-md-4 col-lg-3 col-form-label">First Name</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="fullName" type="text" class="form-control" id="fullName" value="Kevin">
+                        <input name="fname" type="text" class="form-control" value="{{fname}}" />
                       </div>
                     </div>
 
                     <div class="row mb-3">
                       <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Email</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="fullName" type="text" class="form-control" id="fullName" value="k.anderson@example.com">
+                        <input name="email" type="text" class="form-control" value="{{email}}" />
                       </div>
                     </div>
 
                     <div class="text-center">
-                      <button type="submit" class="btn btn-primary">Save Changes</button>
+                      <button type="submit" class="ui button primary">Save Changes</button>
                     </div>
                   </form><!-- End Profile Edit Form -->
 
                 </div>
 
-                <div class="tab-pane fade pt-3" id="profile-change-password" role="tabpanel">
+                {{!-- <div class="tab-pane fade pt-3" id="profile-change-password" role="tabpanel">
                   <!-- Change Password Form -->
                   <form>
 
@@ -262,7 +263,7 @@
                     </div>
                   </form><!-- End Change Password Form -->
 
-                </div>
+                </div> --}}
 
               </div><!-- End Bordered Tabs -->
 
@@ -274,3 +275,114 @@
     </section>
 
   </main>
+
+
+
+
+
+<script>
+  $('#updateForm').on('submit', (e)=>
+  {
+    e.preventDefault()
+
+    //Convert input value toString()
+    let lname = $('[name=lname]').val()
+    let fname = $('[name=fname]').val()
+    let email = $('[name=email]').val()
+
+    //Empty FORM 
+    if(fname == "" || lname == "" || email == "")
+    {
+        $.toast({
+            heading: 'Error',
+            text: 'Please fill all the inputs',
+            position: 'top-right',
+            icon: 'error',
+            hideAfter: 4000,
+            loader: true, 
+            stack: false
+        })
+    }
+
+
+    else
+    {
+      //Limit char number for Sec.
+      if(fname.length > 15 || lname.length > 15 || email.length > 30 ){
+        $.toast({
+            heading: 'Warning',
+            text: 'Information entered does not look legit',
+            position: 'top-right',
+            icon: 'warning',
+            hideAfter: 4000,
+            loader: true, 
+            stack: false
+        })
+      }
+
+      else if(validateEmail(email) == false)
+      {
+        $.toast({
+            heading: 'Warning',
+            text: 'Email does not look legit',
+            position: 'top-right',
+            icon: 'warning',
+            hideAfter: 5000,
+            loader: true, 
+            stack: false
+        })
+        return false
+      }
+
+      else
+      {
+
+        //Send to the server for further troubleshooting 
+        $.ajax({
+            type: 'POST',
+            url: '/admin/updateProfile', 
+            data: { 
+                lname : lname, 
+                fname : fname, 
+                form_email : email
+            },
+            success: function(res)
+            {
+              console.log(res)
+              if(res == 'found'){
+                $.toast({
+                    heading: 'Warning',
+                    text: 'Email already exists',
+                    position: 'top-right',
+                    icon: 'warning',
+                    hideAfter: 5000,
+                    loader: true, 
+                    stack: false
+                })
+              }
+              else
+              {
+                $.toast({
+                    heading: 'Success',
+                    text: 'Profile successfuly updated !',
+                    position: 'top-right',
+                    icon: 'success',
+                    hideAfter: 6000,
+                    loader: true, 
+                    stack: false
+                })
+
+                //Reset form
+                //$('#registerForm').trigger('reset')
+              }
+                    
+            }, error: function(e){
+              console.log(e)
+            }
+        })//End Ajax
+      }
+        
+    }//End ELSE information treatment 
+    
+  }) //End Login Form submission 
+</script>

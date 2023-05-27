@@ -236,7 +236,7 @@
 						text: 'Admin user deleted successfuly',
 						position: 'top-right',
 						icon: 'success',
-						hideAfter: 3500,
+						hideAfter: 2000,
 						loader: true, 
 						stack: false
 					})
@@ -244,7 +244,7 @@
 					setTimeout(function(){
 						window.location = 'users'
 						
-					}, 3000)
+					}, 1800)
 				}
 				else if(res == 'unauthorized'){
 					$.toast({
@@ -252,10 +252,26 @@
 						text: 'You are not allowed to delete a User',
 						position: 'top-right',
 						icon: 'warning',
-						hideAfter: 5000,
+						hideAfter: 3500,
 						loader: true, 
 						stack: false
 					})
+                }
+				else if(res == 'deleteMyAccount'){
+					$.toast({
+						heading: 'You have deleted your account',
+						text: 'You are being redirected to the Login page',
+						position: 'top-right',
+						icon: 'error',
+						hideAfter: 4000,
+						loader: true, 
+						stack: false
+					})
+					//Delay page reload 
+					setTimeout(function(){
+						window.location = '/admin/accountDeleted'
+						
+					}, 3300)
                 }
 				else 
 				{

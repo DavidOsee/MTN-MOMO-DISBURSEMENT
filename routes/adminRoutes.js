@@ -3,7 +3,7 @@
 const express = require('express')
 const admin_router = express.Router()
 
-const { Login, Log_me_in, Logout, Home, TransFee, Profile, Users, Register, Admin_register, Delete_user,  ForgotPwd, ForgotPwd_otp, Password_reset, SendOTP, ValidateOTP, ResetPwd } = require('../controllers/adminController.js')
+const { Login, Log_me_in, Logout, Home, TransFee, Profile, Users, Register, Admin_register, Delete_user,  ForgotPwd, ForgotPwd_otp, Password_reset, SendOTP, ValidateOTP, ResetPwd, SelfAccountDeleted } = require('../controllers/adminController.js')
 
 //Middlewares
 const Protect = require('../middlewares/admin_authMiddleware.js')
@@ -17,10 +17,12 @@ admin_router
 .get('/profile', Protect, Profile)
 .get('/users', Protect, Users)
 .get('/register', Protect, Register)
+.get('/accountDeleted', Protect, SelfAccountDeleted)
 
 .get('/forgot-password', ForgotPwd)
 .get('/otp-auth', PwdResetProtect, ForgotPwd_otp)
 .get('/password-reset', PwdResetProtect, Password_reset)
+
 
 //
 admin_router
@@ -33,6 +35,7 @@ admin_router
 .post('/validateOTP', PwdResetProtect, ValidateOTP)
 .post('/resetpwd', PwdResetProtect, ResetPwd)
 
+//updateProfile
 
 
 //Export to server 

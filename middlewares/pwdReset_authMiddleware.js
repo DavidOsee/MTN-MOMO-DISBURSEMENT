@@ -19,7 +19,7 @@ const PwdResetProtect = (req, res, next)=>{
 
     let token
 
-    if(ls.getItem(`resetToken_${reset_id}`))
+    if(ls.getItem(`resetToken_${reset_id}`) != null)
         token = ls.getItem(`resetToken_${reset_id}`) 
     
     //Token does not exist >> Admin currently logged out 

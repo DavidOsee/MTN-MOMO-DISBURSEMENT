@@ -15,7 +15,7 @@ const Trans_auth = (req, res, next)=>{
 
     let trans_token
 
-    if(localStorage.getItem(`trans_token_${trans_token_id}`))
+    if(localStorage.getItem(`trans_token_${trans_token_id}`) != null)
         trans_token = localStorage.getItem(`trans_token_${trans_token_id}`)
     
     //Token does not exist 

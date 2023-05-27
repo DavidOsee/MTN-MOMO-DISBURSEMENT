@@ -248,65 +248,67 @@
 					})
 				}
 
-				 //Send to the server for further troubleshooting 
-				$.ajax({
-					type: 'POST',
-					url: 'transfee',
-					data: { 
-						fee : transFee
-					},
-					success: function(res)
-					{
-						console.log(res)
-						//return false
-						if(res == 'error')
+				else{
+					//Send to the server for further troubleshooting 
+					$.ajax({
+						type: 'POST',
+						url: 'transfee',
+						data: { 
+							fee : transFee
+						},
+						success: function(res)
 						{
-							$.toast({
-								heading: 'Warning',
-								text: 'Something went wrong, Please try again',
-								position: 'top-right',
-								icon: 'warning',
-								hideAfter: 7000,
-								loader: true, 
-								stack: false
-							})
-						}else
-						{
-							//Update Transaction FEE h1
-							$('#fee').text(res) //res = updated transFee
-
-							//Btn swap 
-							$('#submitBtn').addClass('d-none')
-							$('#submitLoading').removeClass('d-none')
-
-							//Delay then update 
-                        	setTimeout(function()
+							console.log(res)
+							//return false
+							if(res == 'error')
 							{
-                            //
 								$.toast({
-								heading: 'Success',
-								text: 'Transaction fee updated',
-								position: 'top-right',
-								icon: 'success',
-								hideAfter: 5000,
-								loader: true, 
-								stack: false
+									heading: 'Warning',
+									text: 'Something went wrong, Please try again',
+									position: 'top-right',
+									icon: 'warning',
+									hideAfter: 7000,
+									loader: true, 
+									stack: false
 								})
+							}else
+							{
+								//Update Transaction FEE h1
+								$('#fee').text(res) //res = updated transFee
 
 								//Btn swap 
-								$('#submitBtn').removeClass('d-none')
-								$('#submitLoading').addClass('d-none')
-                           
-                            
-                       		}, 2000)
-							
-						}   
-					}, error: function(e){
-						console.log(e)
-					}
-				})//End Ajax
+								$('#submitBtn').addClass('d-none')
+								$('#submitLoading').removeClass('d-none')
 
-			}
+								//Delay then update 
+								setTimeout(function()
+								{
+								//
+									$.toast({
+									heading: 'Success',
+									text: 'Transaction fee updated',
+									position: 'top-right',
+									icon: 'success',
+									hideAfter: 5000,
+									loader: true, 
+									stack: false
+									})
+
+									//Btn swap 
+									$('#submitBtn').removeClass('d-none')
+									$('#submitLoading').addClass('d-none')
+							
+								
+								}, 2000)
+								
+							}   
+						}, error: function(e){
+							console.log(e)
+						}
+					})//End Ajax
+				}
+
+			}//Authorized Admin 
 
 		})//End TransFeeForm 
 

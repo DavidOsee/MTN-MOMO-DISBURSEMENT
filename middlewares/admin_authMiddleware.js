@@ -19,7 +19,7 @@ const Protect = (req, res, next)=>{
 
     let token
 
-    if(ls.getItem(`token_${admin_id}`))
+    if(ls.getItem(`token_${admin_id}`) != null)
         token = ls.getItem(`token_${admin_id}`) 
     
     //Token does not exist >> Admin currently logged out 

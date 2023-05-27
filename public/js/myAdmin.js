@@ -167,7 +167,7 @@ $(document).ready(function() {
                 })
             }
 
-            if(validateEmail(email) == false)
+            else if(validateEmail(email) == false)
             {
                 $.toast({
                     heading: 'Warning',
@@ -180,65 +180,69 @@ $(document).ready(function() {
                 })
                 return false
             }
-            //Send to the server for further troubleshooting 
-            $.ajax({
-                type: 'POST',
-                url: '/admin/admin_register', 
-                data: { 
-                    lname : lname, 
-                    fname : fname, 
-                    form_email : email, 
-                    form_role : role, //To avoid conflict on the server side 
-                    pwd : pwd 
-                },
-                success: function(res)
-                {
-                    console.log(res)
-                    if(res == 'found'){
-                        $.toast({
-                            heading: 'Warning',
-                            text: 'Email already exists',
-                            position: 'top-right',
-                            icon: 'warning',
-                            hideAfter: 5000,
-                            loader: true, 
-                            stack: false
-                        })
-                    }
-                    else if(res == 'unauthorized'){
-                        $.toast({
-                            heading: 'Access denied',
-                            text: 'You are not allowed to register a new User',
-                            position: 'top-right',
-                            icon: 'warning',
-                            hideAfter: 5000,
-                            loader: true, 
-                            stack: false
-                        })
-                    }
-                    else
+
+            else{
+
+                //Send to the server for further troubleshooting 
+                $.ajax({
+                    type: 'POST',
+                    url: '/admin/admin_register', 
+                    data: { 
+                        lname : lname, 
+                        fname : fname, 
+                        form_email : email, 
+                        form_role : role, //To avoid conflict on the server side 
+                        pwd : pwd 
+                    },
+                    success: function(res)
                     {
-                        $.toast({
-                            heading: 'Success',
-                            text: 'New Admin User created !',
-                            position: 'top-right',
-                            icon: 'success',
-                            hideAfter: 7000,
-                            loader: true, 
-                            stack: false
-                        })
+                        console.log(res)
+                        if(res == 'found'){
+                            $.toast({
+                                heading: 'Warning',
+                                text: 'Email already exists',
+                                position: 'top-right',
+                                icon: 'warning',
+                                hideAfter: 5000,
+                                loader: true, 
+                                stack: false
+                            })
+                        }
+                        else if(res == 'unauthorized'){
+                            $.toast({
+                                heading: 'Access denied',
+                                text: 'You are not allowed to register a new User',
+                                position: 'top-right',
+                                icon: 'warning',
+                                hideAfter: 5000,
+                                loader: true, 
+                                stack: false
+                            })
+                        }
+                        else
+                        {
+                            $.toast({
+                                heading: 'Success',
+                                text: 'New Admin User created !',
+                                position: 'top-right',
+                                icon: 'success',
+                                hideAfter: 7000,
+                                loader: true, 
+                                stack: false
+                            })
 
-                        //Reset form
-                        //$('#registerForm').trigger('reset')
+                            //Reset form
+                            //$('#registerForm').trigger('reset')
+                        }
+                            
+                    }, error: function(e){
+                        console.log(e)
                     }
-                        
-                }, error: function(e){
-                    console.log(e)
-                }
-            })//End Ajax
-        }
+                })//End Ajax
+            }
+            
+        }//End ELSE information treatment 
         
-
     }) //End Login Form submission 
 
 
