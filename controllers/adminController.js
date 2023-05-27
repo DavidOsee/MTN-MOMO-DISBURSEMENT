@@ -471,6 +471,14 @@ const Login = asyncHandler (async(req,res)=>
       res.redirect('/admin/home')
   
 
+  //Deleting resetToken if User already generatted it >> going back to /forgot-password 
+  if(req.cookies.reset_id)
+    if(ls.getItem('resetToken_'+req.cookies.reset_id) != null)
+    {
+      res.clearCookie('reset_id')
+      ls.removeItem('resetToken_'+req.cookies.reset_id)
+    }
+
   //Init remembered credentials
   let admin_email 
 
@@ -604,6 +612,15 @@ const Register = asyncHandler (async(req,res)=>{
 //@ Private access 
 
 const ForgotPwd = asyncHandler (async(req,res)=>{
+
+  //Deleting resetToken if User already generatted it then going back to /forgot-password 
+  if(req.cookies.reset_id)
+    if(ls.getItem('resetToken_'+req.cookies.reset_id) != null)
+    {
+      res.clearCookie('reset_id')
+      ls.removeItem('resetToken_'+req.cookies.reset_id)
+    }
+      
 
   //
   res.render('admin/forgot-password')
