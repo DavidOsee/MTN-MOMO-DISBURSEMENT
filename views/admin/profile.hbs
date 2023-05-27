@@ -281,6 +281,12 @@
 
 
 <script>
+  
+  const validateEmail = ($email)=> {
+    var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+    return emailReg.test( $email );
+  }
+
   $('#updateForm').on('submit', (e)=>
   {
     e.preventDefault()
@@ -289,6 +295,8 @@
     let lname = $('[name=lname]').val()
     let fname = $('[name=fname]').val()
     let email = $('[name=email]').val()
+
+    console.log(lname)
 
     //Empty FORM 
     if(fname == "" || lname == "" || email == "")
@@ -348,7 +356,7 @@
             },
             success: function(res)
             {
-              console.log(res)
+              //console.log(res)
               if(res == 'found'){
                 $.toast({
                     heading: 'Warning',

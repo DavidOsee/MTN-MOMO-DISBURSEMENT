@@ -224,6 +224,47 @@ const TransFee = asyncHandler (async(req,res)=>{
 
 
 
+
+
+
+//TransFee  @ /admin/updateProfiile [POST]
+//@ Private access 
+
+const UpdateProfile = asyncHandler (async(req,res)=>{
+
+  const { lname, fname, form_email } = req.body
+
+  //Grab User id from the payload 
+  const { id } = req.admin_details
+
+  //Check credentials
+  const admin = await Admin_user.find({ email : form_email})
+
+  //No Admin found
+  if(admin.length != 0)  
+    res.send('found')
+  
+  else
+  {
+    try {
+      //
+      await Admin_user.findOneAndUpdate({"_id" : id}, { "$set": { 'firstname' : fname, 'lastname' : lname, 'email' : form_email} }, { new: true }).exec()
+
+      res.status(200).send('all good')
+
+    } catch (error) {
+      res.send(error)
+    }
+    
+  }
+
+})
+
+
+
+
+
+
 //Delete Admin User 
 
 //Delete_user  @ /admin/delete [POST]
@@ -349,8 +390,6 @@ const ValidateOTP = asyncHandler (async(req,res)=>
 })//End ValidateOTP
 
 
-
-
 const ResetPwd = asyncHandler (async(req,res)=>
 {
 
@@ -366,7 +405,7 @@ const ResetPwd = asyncHandler (async(req,res)=>
     let pwd = await bcrypt.hash(new_pwd, 10)  
 
     //Create new db instance 
-    await Admin_user.findOneAndUpdate({ password : pwd}, { new: true })
+    await Admin_user.findOneAndUpdate({"email" : email}, { "$set": { password : pwd}} , { new: true }).exec()
     
   } catch (error) {
       res.send('error')
@@ -401,6 +440,9 @@ const ResetPwd = asyncHandler (async(req,res)=>
   
 
 })//End ResetPwd
+
+
+
 
 
 //========================= FUNCTIONS 
@@ -489,6 +531,7 @@ const Home = asyncHandler (async(req,res)=>{
 
   //render variables for the view 
   res.render('admin/home', {fn, ln, role, ls_amount, trans_obj})
+
 })
 
 
@@ -577,6 +620,7 @@ const ForgotPwd_otp = asyncHandler (async(req,res)=>{
 })
 
 
+
 //PASSWORD RESET @ /password-reset [GET]
 //@ Private access 
 
@@ -634,4 +678,4 @@ const SelfAccountDeleted = asyncHandler (async(req,res)=>
 
 
 //EXPORT TO ADMIN ROUTES 
-module.exports = { Login, Log_me_in, Logout, Home, TransFee, Profile, Users, Register, Admin_register, Delete_user, ForgotPwd, ForgotPwd_otp, Password_reset, SendOTP, ValidateOTP, ResetPwd, SelfAccountDeleted }
+module.exports = { Login, Log_me_in, Logout, Home, TransFee, Profile, Users, Register, Admin_register, Delete_user, ForgotPwd, ForgotPwd_otp, Password_reset, SendOTP, ValidateOTP, ResetPwd, SelfAccountDeleted, UpdateProfile }
