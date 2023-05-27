@@ -230,34 +230,54 @@ const TransFee = asyncHandler (async(req,res)=>{
 //TransFee  @ /admin/updateProfiile [POST]
 //@ Private access 
 
-const UpdateProfile = asyncHandler (async(req,res)=>{
+const UpdateProfile = asyncHandler (async(req,res)=>
+{
 
   const { lname, fname, form_email } = req.body
 
   //Grab User id from the payload 
-  const { id } = req.admin_details
+  const { id, email } = req.admin_details
 
   //Check credentials
   const admin = await Admin_user.find({ email : form_email})
 
-  //No Admin found
-  if(admin.length != 0)  
-    res.send('found')
-  
-  else
+
+  //Email not modified but lanme and fname 
+  if(email == form_email) //Payload email == updated email
   {
-    try {
-      //
-      await Admin_user.findOneAndUpdate({"_id" : id}, { "$set": { 'firstname' : fname, 'lastname' : lname, 'email' : form_email} }, { new: true }).exec()
-
-      res.status(200).send('all good')
-
-    } catch (error) {
-      res.send(error)
-    }
-    
+      try {
+        //Update only the fname and lname
+        await Admin_user.findOneAndUpdate({"_id" : id}, { "$set": { 'firstname' : fname, 'lastname' : lname, 'email' : form_email} }, { new: true }).exec()
+  
+        res.status(200).send('all good')
+  
+      } catch (error) {
+        res.send(error)
+      }
   }
+    
+  //Email updated >> Update the whole Form 
+  else 
+  {
+    //Check from DB whether the updated Email is unique 
+    if(admin.length != 0)  
+      res.send('found')
 
+    else 
+    {
+      try {
+        //
+        await Admin_user.findOneAndUpdate({"_id" : id}, { "$set": { 'firstname' : fname, 'lastname' : lname, 'email' : form_email} }, { new: true }).exec()
+  
+        res.status(200).send('all good')
+    
+        } catch (error) {
+          res.send(error)
+        }
+    }
+   
+  }//End ELSE -- Whole FORM updte
+    
 })
 
 
