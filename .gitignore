@@ -2,7 +2,7 @@
 node_modules
 *.txt
 *.csv
-#*.json
+*.json
 package-lock.json
 tabler-dev
 NiceAdmin
